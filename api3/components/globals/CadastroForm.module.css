@@ -1,0 +1,130 @@
+/*
+ * ATUALIZAÇÕES:
+ * 1. REMOVIDO: Estilos globais (html, body) que não devem estar em um módulo.
+ * 2. ADICIONADO: Estilo para o placeholder, garantindo a visibilidade do texto nos inputs.
+ */
+
+/* --- Layout da Página (Wrapper) --- */
+.cadastro-page-wrapper {
+    /* COR DE FUNDO (Roxo/Vinho da sua imagem) */
+    background-color: #560e91; 
+    
+    min-height: 100vh;         
+    width: 100%;
+    /* Flexbox para centralizar */
+    display: flex;             
+    justify-content: center;   /* Centraliza horizontalmente */
+    align-items: center;       /* Centraliza verticalmente */
+    
+    /* Garante largura total e padding de segurança */
+    padding: 20px;
+}
+
+/* --- Container do Formulário --- */
+.cadastro-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+    padding: 40px 20px;
+    max-width: 400px;
+    width: 100%;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Cabeçalho e Título --- */
+.cadastro-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.header-line {
+    width: 5px;
+    height: 40px;
+    background-color: #FF0066; 
+    margin-right: 10px;
+}
+
+.cadastro-title {
+    font-size: 1.8em;
+    color: #000000;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* --- Formulário Principal --- */
+.cadastro-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Campos de Input (Resolver Problema de Placeholders) --- */
+.form-input {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.2s;
+    color: #333; /* Garante que o texto digitado seja visível */
+}
+
+.form-input:focus {
+    border-color: #FF0066;
+}
+
+/* ESTILO CRÍTICO PARA OS PLACEHOLDERS */
+.form-input::placeholder {
+    color: #888; /* Cor escura para garantir a visibilidade do texto de guia */
+    opacity: 1; /* Garante que não esteja transparente */
+}
+
+/* --- Botão Principal --- */
+.button-primary {
+    padding: 12px;
+    background-color: #FF0066;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.button-primary:hover {
+    background-color: #E6005C;
+}
+
+/* --- Textos Auxiliares --- */
+.error-text {
+    color: #FF0066;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #000000;
+}
+
+.link-secondary {
+    color: #FF0066; 
+    text-decoration: none;
+    font-weight: bold;
+    transition: text-decoration 0.2s;
+}
+
+.link-secondary:hover {
+    text-decoration: underline;
+}

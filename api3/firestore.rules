@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regras para coleção respostas_part1
+    match /respostas_part1/{document} {
+      allow read, write: if true;  // Permite leitura e escrita para todos
+    }
+    
+    // Regras para coleção resposta_part_4
+    match /resposta_part_4/{document} {
+      allow read, write: if true;  // Permite leitura e escrita para todos
+    }
+    
+    // Regras para outras coleções que você possa ter
+    match /{document=**} {
+      allow read, write: if true;  // Permite leitura e escrita para todos
+    }
+  }
+}
