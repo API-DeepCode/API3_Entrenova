@@ -17,19 +17,18 @@
 ## 🎯Desafio
 Criar um formulário com perguntas específicas fornecidas pela empresa para obter um parâmetro geral sobre os possíveis problemas que o cliente esteja enfrentando e, de acordo com as respostas coletadas, elaborar um relatório que forneça diagnósticos personalizados utilizando IA.
 
-## 📋Backlog do Produto
-| Prioridade | User Stories | Estimativa | Sprint |
-| --------- | ------------- | ---------- | ------ |
-| Alta | Como **gestor** quero responder um formulário de diagnóstico inical para que eu consiga registrar os principais desafios da minha empresa. | 5 | 1 |
-| Alta | Como **gestor** quero visualizar um relatório simples baseado nas minhas respostas para ter uma primeira visão dos problemas da minha empresa. | 5 | 1 |
-| Alta | Como **gestor** quero responder um formulário mais detalhado sobre minha empresa para que o diagnóstico seja mais preciso e reflita minha realidade. | 5 | 1 |
-| Alta | Como **novo usuário**, quero preencher um formulário único com as 4 dimensões de uma só vez, para que eu tenha uma experiência fluida e contínua. | 8 | 2 |
-| Alta | Como **usuário que finalizou o preenchimento**, quero visualizar na tela um relatório com uma dimensão gratuita e ver as outras 3 bloqueadas com um CTA, para que eu entenda o valor do produto e seja incentivado a comprar. | 5 | 2 |
-| Média | Como usuário que finalizou o formulário, quero receber automaticamente um e-mail com o link para o meu relatório gratuito, para que eu possa acessá-lo a qualquer momento. | 2 | 2 |
-| Média | Como potencial cliente, quero entender claramente as opções de trilhas (Ouro, Diamante, Premium), seus preços e benefícios distintos, para que eu possa tomar uma decisão de compra informada. | 5 | 2 |
-| Alta | Como **usuário**, quero que a navegação no site seja mais intuitiva e fácil. | 3 | 2 |
-| Baixa | Como **usuário com dúvidas**, quero interagir com um chatbot para obter respostas rápidas para perguntas frequentes, para que eu possa resolver meus problemas de forma autônoma. | 3 | 2 |
-| Alta | Como **usuário que finalizou a avaliação**, quero receber um relatório com análises e insights que sejam profundos, personalizados e acionáveis, para que eu perceba um alto valor no diagnóstico e sinta confiança para adquirir a trilha completa. | 3 | 2 |
+## 📋Backlog do Produto Sprint 3
+| Prioridade | User Stories | Estimativa | Sprint | Status|
+| --------- | ------------- | ---------- | ------ |-------|
+| Alta | Como **usuário que finalizou o formulário**, quero ver meu relatório parcialmente bloqueado (ou um resumo) com um CTA (Call to Action) claro para "Desbloquear Relatório Completo", para que eu entenda o valor e seja incentivado a comprar. | 6 | 3 |Em Andamento|
+| Alta | Como **usuário que escolheu um plano**, quero ser direcionado para um checkout (ex: integração com Stripe, Mercado Pago, etc) para inserir meus dados de pagamento e finalizar a compra. | 3 | 3 |Em Andamento|
+| Alta | Como **usuário**, quero ter uma navegação completa no dashboard. | 8 | 3 |Em Andamento|
+| Alta | Como **usuário que pagou**, quero que o relatório contenha análises e insights que sejam profundos, personalizados e acionáveis, para que eu perceba um alto valor no diagnóstico. | 8 | 3 |Em Andamento|
+| Alta | Como **usuário**, quero receber a confirmação de pagamento e desbloquear automaticamente o relatório completo e o acesso aos conteúdos do dashboard. | 4 | 3 |Em Andamento|
+| Média | Como **usuário que acabou de comprar um plano**, quero acessar uma "Aula Exemplo"(ou "Tour da Plataforma") dentro do meu dashboard, para eu entender como as trilhas de aprendizado funcionam na prática. | 6 | 3 |Em Andamento|
+| Média | Como **usuário**, quero acessar uma página "Minha Conta" onde eu possa ver qual plano assinei e (futuramente) gerenciar minha assinatura. | 4 | 3 |Em Andamento|
+| Baixa | Como **usuário**, se eu clicar em "Gestão de Equipe", quero ver uma página que eu possa adicionar meu colaboradores e acompanhar o engajamento deles. | 3 | 3 |Em Andamento|
+
 
 
 ## 🥇 DoR - Definition of Ready <a id="dor"></a>
@@ -63,9 +62,9 @@ Criar um formulário com perguntas específicas fornecidas pela empresa para obt
 ## 📆Sprints
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | -----------   | ------------------------------------------------ |
-|🔖 **SPRINT 1** | 08/09 - 28/09 | [Sprint 1 Docs](Documentacao\Sprint1.md)          |
-|🔖 **SPRINT 2** | 06/10 - 26/10 | [Sprint 1 Docs](Documentacao\Sprint2.md)          |
-|🔖 **SPRINT 3** | 03/11 - 23/11 | [Sprint 1 Docs](Documentacao\Sprint3.md)                                  |
+|🔖 **SPRINT 1** | 08/09 - 28/09 |                                                  |
+|🔖 **SPRINT 2** | 06/10 - 26/10 |                                                  |
+|🔖 **SPRINT 3** | 03/11 - 23/11 |                                                  |
 
 
 ## 💻Tecnologias Utilizadas
