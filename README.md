@@ -30,6 +30,14 @@ Criar um formulário com perguntas específicas fornecidas pela empresa para obt
 | Alta | Como **usuário**, quero que a navegação no site seja mais intuitiva e fácil. | 3 | 2 |
 | Baixa | Como **usuário com dúvidas**, quero interagir com um chatbot para obter respostas rápidas para perguntas frequentes, para que eu possa resolver meus problemas de forma autônoma. | 3 | 2 |
 | Alta | Como **usuário que finalizou a avaliação**, quero receber um relatório com análises e insights que sejam profundos, personalizados e acionáveis, para que eu perceba um alto valor no diagnóstico e sinta confiança para adquirir a trilha completa. | 3 | 2 |
+| Alta | Como **usuário que finalizou o formulário**, quero ver meu relatório parcialmente bloqueado (ou um resumo) com um CTA (Call to Action) claro para "Desbloquear Relatório Completo", para que eu entenda o valor e seja incentivado a comprar. | 6 | 3 |
+| Alta | Como **usuário que escolheu um plano**, quero ser direcionado para um checkout (ex: integração com Stripe, Mercado Pago, etc) para inserir meus dados de pagamento e finalizar a compra. | 3 | 3 |
+| Alta | Como **usuário**, quero ter uma navegação completa no dashboard. | 8 | 3 |
+| Alta | Como **usuário que pagou**, quero que o relatório contenha análises e insights que sejam profundos, personalizados e acionáveis, para que eu perceba um alto valor no diagnóstico. | 8 | 3 |
+| Alta | Como **usuário**, quero receber a confirmação de pagamento e desbloquear automaticamente o relatório completo e o acesso aos conteúdos do dashboard. | 4 | 3 |
+| Média | Como **usuário que acabou de comprar um plano**, quero acessar uma "Aula Exemplo"(ou "Tour da Plataforma") dentro do meu dashboard, para eu entender como as trilhas de aprendizado funcionam na prática. | 6 | 3 |
+| Média | Como **usuário**, quero acessar uma página "Minha Conta" onde eu possa ver qual plano assinei e (futuramente) gerenciar minha assinatura. | 4 | 3 |
+| Baixa | Como **usuário**, se eu clicar em "Gestão de Equipe", quero ver uma página que eu possa adicionar meu colaboradores e acompanhar o engajamento deles. | 3 | 3 |
 
 
 ## 🥇 DoR - Definition of Ready <a id="dor"></a>
