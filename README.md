@@ -63,9 +63,9 @@ Criar um formulário com perguntas específicas fornecidas pela empresa para obt
 ## 📆Sprints
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | -----------   | ------------------------------------------------ |
-|🔖 **SPRINT 1** | 08/09 - 28/09 | [Sprint 1 Docs](Documentacao\Sprint1.md)          |
-|🔖 **SPRINT 2** | 06/10 - 26/10 | [Sprint 1 Docs](Documentacao\Sprint2.md)          |
-|🔖 **SPRINT 3** | 03/11 - 23/11 | [Sprint 1 Docs](Documentacao\Sprint3.md)                                  |
+|🔖 **SPRINT 1** | 08/09 - 28/09 | [Sprint 1 Docs](Documentacao/Sprint1.md)          |
+|🔖 **SPRINT 2** | 06/10 - 26/10 | [Sprint 2 Docs](Documentacao/Sprint2.md)          |
+|🔖 **SPRINT 3** | 03/11 - 23/11 | [Sprint 3 Docs](Documentacao/Sprint3.md)                                  |
 
 
 ## 💻Tecnologias Utilizadas
