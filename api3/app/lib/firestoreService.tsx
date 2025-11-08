@@ -1,5 +1,6 @@
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, query, orderBy, limit, runTransaction } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, runTransaction, getDoc, increment } from "firebase/firestore";
 import { db } from "./firebase"; // reutiliza a instância já inicializada em firebase.tsx
+import { User } from "@/lib/type";
 
 // === COUNTER (transacional) ===
 // Usamos um documento em 'counters/{collectionName}' para armazenar o último ID
@@ -105,6 +106,41 @@ export async function addSubResponse(parentCollection: string, parentId: number 
     return docRef.id;
   } catch (error) {
     console.error('Erro ao adicionar subdocumento:', error);
+    throw error;
+  }
+}
+
+// ========== Conexões para o Usuário ==========
+
+// Este código serve para gerar um ID como número auto-increment
+async function getNextUserId(): Promise<number> {
+  const counterRef = doc(db, "counters", "usuarios");
+
+  const counterSnap = await getDoc(counterRef);
+  if (counterSnap.exists()) {
+    // Atualiza contador existente
+    await updateDoc(counterRef, { value: increment(1) });
+    const newValue = counterSnap.data().value + 1;
+    return newValue;
+  } else {
+    // Cria o contador se não existir
+    await setDoc(counterRef, { value: 1 });
+    return 1;
+  }
+}
+
+// Cadastra usuários
+export async function cadastrarUsuario(usuario: User) {
+  try {
+    const nextId = await getNextUserId();
+
+    const userRef = doc(db, "Usuario", nextId.toString());
+    await setDoc(userRef, usuario);
+
+    console.log(`Usuário cadastrado com ID: ${nextId}`);
+    return nextId;
+  } catch (error) {
+    console.error("Erro ao cadastrar usuário:", error);
     throw error;
   }
 }

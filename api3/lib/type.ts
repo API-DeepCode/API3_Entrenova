@@ -6,13 +6,12 @@ export interface FormsQuestions{
 }
 
 export interface User{
-    nome_empresa: string;
-    cnpj: number;
-    email: string;
-    telefone: string;
-    nome_responsavel: string;
-    funcao_responsavel: string;
+    cargo_responsavel: string;
     cidade: string;
-    estado: string;
+    cnpj: string;
+    email_contato: string;
+    nome_empresa: string;
+    nome_responsavel: string;
     senha: string;
+    telefone_contato: string;
 }

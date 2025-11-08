@@ -3,28 +3,20 @@ import React, { useState } from 'react';
 import { addResponse } from '@/app/lib/firestoreService'; 
 import styles from '../../components/globals/CadastroForm.module.css';
 import { useNavigation } from '@/hooks/useNavigation'; 
-
-interface CadastroData {
-  nomeEmpresa: string;
-  cnpj: string;
-  email: string;
-  telefone: string;
-  nomeResponsavel: string;
-  cargoResponsavel: string;
-  cidadeEstado: string;
-}
+import { User } from '@/lib/type';
 
 const CadastroForm: React.FC = () => {
   const { navigateToPlans } = useNavigation(); //
 
-  const [formData, setFormData] = useState<CadastroData>({
-    nomeEmpresa: '',
-    cnpj: '',
-    email: '',
-    telefone: '',
-    nomeResponsavel: '',
-    cargoResponsavel: '',
-    cidadeEstado: '',
+  const [formData, setFormData] = useState<User>({
+    cargo_responsavel: "",
+    cidade: "",
+    cnpj: "",
+    email_contato: "",
+    nome_empresa: "",
+    nome_responsavel: "",
+    senha: "",
+    telefone_contato: ""
   });
 
   const [erro, setErro] = useState<string>('');
@@ -38,13 +30,14 @@ const CadastroForm: React.FC = () => {
     e.preventDefault();
 
     const camposObrigatorios = [
-      formData.nomeEmpresa,
+      formData.nome_empresa,
       formData.cnpj,
-      formData.email,
-      formData.telefone,
-      formData.nomeResponsavel,
-      formData.cargoResponsavel,
-      formData.cidadeEstado
+      formData.email_contato,
+      formData.telefone_contato,
+      formData.nome_responsavel,
+      formData.cargo_responsavel,
+      formData.cidade,
+      formData.senha,
     ];
 
     const camposVazios = camposObrigatorios.some(campo => !campo.trim());
@@ -58,13 +51,14 @@ const CadastroForm: React.FC = () => {
 
     try {
       const dadosParaFirestore = {
-        nome_empresa: formData.nomeEmpresa,
+        nome_empresa: formData.nome_empresa,
         cnpj: formData.cnpj,
-        email_contato: formData.email,
-        telefone_contato: formData.telefone,
-        nome_responsavel: formData.nomeResponsavel,
-        cargo_responsavel: formData.cargoResponsavel,
-        cidade: formData.cidadeEstado
+        email_contato: formData.email_contato,
+        telefone_contato: formData.telefone_contato,
+        nome_responsavel: formData.nome_responsavel,
+        cargo_responsavel: formData.cargo_responsavel,
+        cidade: formData.cidade,
+        senha: formData.senha,
       };
 
       await addResponse('Id_Usuario', dadosParaFirestore);
@@ -72,13 +66,14 @@ const CadastroForm: React.FC = () => {
       alert('Cadastro realizado com sucesso!');
 
       setFormData({
-        nomeEmpresa: '',
+        nome_responsavel: '',
         cnpj: '',
-        email: '',
-        telefone: '',
-        nomeResponsavel: '',
-        cargoResponsavel: '',
-        cidadeEstado: ''
+        email_contato: '',
+        telefone_contato: '',
+        nome_empresa: '',
+        cargo_responsavel: '',
+        cidade: '',
+        senha: ""
       });
       
       navigateToPlans();
@@ -101,9 +96,9 @@ const CadastroForm: React.FC = () => {
         <form onSubmit={handleSubmit} className={styles['cadastro-form']}>
           <input
             type="text"
-            name="nomeEmpresa"
+            name="nome_empresa"
             placeholder="Nome da Empresa"
-            value={formData.nomeEmpresa}
+            value={formData.nome_empresa}
             onChange={handleChange}
             className={styles['form-input']}
           />
@@ -118,41 +113,41 @@ const CadastroForm: React.FC = () => {
           />
           <input
             type="email"
-            name="email"
+            name="email_contato"
             placeholder="E-mail"
-            value={formData.email}
+            value={formData.email_contato}
             onChange={handleChange}
             className={styles['form-input']}
           />
           <input
             type="tel"
-            name="telefone"
+            name="telefone_contato"
             placeholder="Telefone"
-            value={formData.telefone}
+            value={formData.telefone_contato}
             onChange={handleChange}
             className={styles['form-input']}
           />
           <input
             type="text"
-            name="nomeResponsavel"
+            name="nome_responsavel"
             placeholder="Nome do Responsável"
-            value={formData.nomeResponsavel}
+            value={formData.nome_responsavel}
             onChange={handleChange}
             className={styles['form-input']}
           />
           <input
             type="text"
-            name="cargoResponsavel"
+            name="cargo_responsavel"
             placeholder="Cargo/Função do Responsável"
-            value={formData.cargoResponsavel}
+            value={formData.cargo_responsavel}
             onChange={handleChange}
             className={styles['form-input']}
           />
           <input
             type="text"
-            name="cidadeEstado"
+            name="cidade"
             placeholder="Cidade/Estado da Empresa"
-            value={formData.cidadeEstado}
+            value={formData.cidade}
             onChange={handleChange}
             className={styles['form-input']}
           />
