@@ -1,6 +1,7 @@
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, runTransaction, getDoc, increment } from "firebase/firestore";
-import { db } from "./firebase"; // reutiliza a instância já inicializada em firebase.tsx
+import { db, auth } from "./firebase"; // reutiliza a instância já inicializada em firebase.tsx
 import { User } from "@/lib/type";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 // === COUNTER (transacional) ===
 // Usamos um documento em 'counters/{collectionName}' para armazenar o último ID
@@ -142,5 +143,25 @@ export async function cadastrarUsuario(usuario: User) {
   } catch (error) {
     console.error("Erro ao cadastrar usuário:", error);
     throw error;
+  }
+}
+
+// Login do Usuário
+export async function loginUser(email: string, password: string) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    console.log("✅ Usuário logado com sucesso:", user.uid);
+    return { success: true, user };
+  } catch (error: any) {
+    console.error("❌ Erro ao fazer login:", error.message);
+
+    let errorMessage = "Erro ao fazer login.";
+    if (error.code === "auth/invalid-email") errorMessage = "E-mail inválido.";
+    if (error.code === "auth/user-not-found") errorMessage = "Usuário não encontrado.";
+    if (error.code === "auth/wrong-password") errorMessage = "Senha incorreta.";
+
+    return { success: false, error: errorMessage };
   }
 }

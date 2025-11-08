@@ -16,14 +16,23 @@ import { ChatToggler } from "@/components/chatToggler/ChatToggler";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/globals/Header";
+import { useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  const handleLogout = () => {
+    // 🔒 Aqui você colocará depois: signOut(auth)
+    console.log("Usuário saiu");
+    setUser(null);
+  };
 
   return (
   <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground bg-linear-to-b from-background via-background/95 to-background">
     <Header
-      user={}
+      user={user}
+      onLogout={handleLogout}
     />
 
     {/* Seção de Boas-vindas - Bordas estáticas removidas */}

@@ -58,4 +58,4 @@ if (typeof window !== 'undefined') {
 // --------------------------------------------------------
 
 // Exporta as instâncias (analytics pode ser undefined no servidor)
-export { app, db, analytics, firebaseConfig };
+export { app, db, auth, analytics, firebaseConfig };

@@ -1,15 +1,18 @@
+"use client"
+
 import { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
-import { Page } from '../page';
+import { useNavigation } from '@/hooks/useNavigation';
+import { Header } from '@/components/globals/Header';
 
 type props = {
   onLogin: (email: string, password: string) => void;
-  onNavigate: (page: Page) => void;
 };
 
-export function Login({ onLogin, onNavigate }: props) {
+export default function Login({ onLogin }: props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +23,10 @@ export function Login({ onLogin, onNavigate }: props) {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 pt-20">
+        <Header
+        
+        />
+
       <div className="w-full max-w-md">
         <div className="backdrop-blur-md bg-white/10 rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(75,0,255,0.37)] border border-white/20">
           <h1 className="text-3xl text-center mb-2 bg-linear-to-r from-[#FF7FE5] to-[#FFA3E8] bg-clip-text text-transparent">
@@ -74,7 +81,7 @@ export function Login({ onLogin, onNavigate }: props) {
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => onNavigate('register')}
+              onClick={navigation.navigateToRegister}
               className="text-[#FFA3E8] hover:text-white transition-colors text-sm"
             >
               Ainda não tem conta? <span className="underline">Cadastre-se</span>

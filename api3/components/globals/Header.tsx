@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 import { UserCircle, LogOut, ArrowLeft } from "lucide-react";
 import { useNavigation } from "@/hooks/useNavigation";
@@ -26,7 +28,7 @@ export function Header({ user, onLogout }: HeaderProps) {
 
   // Define o texto do botão principal
   const getButtonText = () => {
-    if (pathname === "/landingPage") {
+    if (pathname === "/") {
       return user ? "" : "Login";
     }
     if (pathname === "/login" || pathname === "/register") {
@@ -38,8 +40,7 @@ export function Header({ user, onLogout }: HeaderProps) {
   const buttonText = getButtonText();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-[#5B21B6]/30 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-end p-3 pr-10">
         <div className="flex items-center gap-4">
           {/* Nome da empresa (se logado) */}
           {user && (
@@ -96,7 +97,6 @@ export function Header({ user, onLogout }: HeaderProps) {
             )
           )}
         </div>
-      </div>
     </header>
   );
 }
