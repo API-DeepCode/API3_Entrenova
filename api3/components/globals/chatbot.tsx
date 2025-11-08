@@ -23,7 +23,7 @@ const MensagemDisplay: React.FC<{ mensagem: Mensagem }> = ({ mensagem }) => {
   return (
     <div
       className={cn(
-        "py-2 px-3.5 rounded-lg max-w-[85%] text-sm leading-snug break-words shadow-sm",
+        "py-2 px-3.5 rounded-lg max-w-[85%] text-sm leading-snug wrap-break-word shadow-sm",
         isBot
           ? "bg-gray-700 text-gray-100 self-start rounded-bl-sm"
           : "bg-primary text-primary-foreground self-end rounded-br-sm"
@@ -93,7 +93,7 @@ const Chatbot: React.FC<ChatProps> = ({ titulo, onClose }) => {
   return (
     <div className="w-80 sm:w-96 h-[500px] bg-[#1C1B29] border border-gray-700/50 rounded-lg shadow-xl flex flex-col overflow-hidden text-gray-200">
       {/* Cabeçalho com gradiente igual ao título principal */}
-      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-violet-200 to-fuchsia-300 text-gray-900 shadow-md">
+      <div className="flex justify-between items-center p-3 bg-linear-to-r from-violet-200 to-fuchsia-300 text-gray-900 shadow-md">
         <h3 className="text-base font-semibold">{titulo}</h3>
         <Button
           variant="ghost"
@@ -106,7 +106,7 @@ const Chatbot: React.FC<ChatProps> = ({ titulo, onClose }) => {
       </div>
 
       {/* Área de mensagens */}
-      <div className="flex-grow overflow-y-auto p-4 space-y-3 flex flex-col bg-[#1C1B29] text-gray-100">
+      <div className="grow overflow-y-auto p-4 space-y-3 flex flex-col bg-[#1C1B29] text-gray-100">
         {historico.map((msg, index) => (
           <MensagemDisplay key={index} mensagem={msg} />
         ))}
