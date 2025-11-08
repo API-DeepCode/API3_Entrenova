@@ -1,9 +1,9 @@
 // Caminho: api3/app/lib/firebase.tsx
 
 import { initializeApp, getApps, getApp } from "firebase/app";
-// Import 'isSupported' do Analytics
 import { getAnalytics, isSupported } from "firebase/analytics"; // <<< Importar isSupported
 import { getFirestore } from "firebase/firestore";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth"; // 👈 IMPORTANTE
 
 // Configuração do Firebase (mantida - considere usar variáveis de ambiente)
 const firebaseConfig = {
@@ -20,6 +20,7 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 // Inicializa Firestore (mantido)
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 // --- CORREÇÃO: Inicializa Analytics condicionalmente ---
 let analytics: any; // Declara a variável fora
@@ -36,6 +37,19 @@ if (typeof window !== 'undefined') {
     }
   }).catch(err => {
       console.error("Erro ao verificar suporte do Firebase Analytics:", err);
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      try {
+        await signInAnonymously(auth);
+        console.log("Usuário autenticado anonimamente no Firebase 🔑");
+      } catch (error) {
+        console.error("Erro ao autenticar anonimamente:", error);
+      }
+    } else {
+      console.log("Usuário já autenticado:", user.uid);
+    }
   });
 } else {
     // No servidor, analytics permanecerá undefined
