@@ -1,5 +1,7 @@
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, query, orderBy, limit, runTransaction } from "firebase/firestore";
-import { db } from "./firebase"; // reutiliza a instância já inicializada em firebase.tsx
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, runTransaction, getDoc, increment } from "firebase/firestore";
+import { db, auth } from "./firebase"; // reutiliza a instância já inicializada em firebase.tsx
+import { User } from "@/lib/type";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 // === COUNTER (transacional) ===
 // Usamos um documento em 'counters/{collectionName}' para armazenar o último ID
@@ -106,5 +108,78 @@ export async function addSubResponse(parentCollection: string, parentId: number 
   } catch (error) {
     console.error('Erro ao adicionar subdocumento:', error);
     throw error;
+  }
+}
+
+// ========== Conexões para o Usuário ==========
+
+// Este código serve para gerar um ID como número auto-increment
+async function getNextUserId(): Promise<number> {
+  const counterRef = doc(db, "counters", "usuarios");
+
+  const counterSnap = await getDoc(counterRef);
+  if (counterSnap.exists()) {
+    // Atualiza contador existente
+    await updateDoc(counterRef, { value: increment(1) });
+    const newValue = counterSnap.data().value + 1;
+    return newValue;
+  } else {
+    // Cria o contador se não existir
+    await setDoc(counterRef, { value: 1 });
+    return 1;
+  }
+}
+
+// Cadastra usuários
+export async function cadastrarUsuario(dados: User) {
+  try {
+    // Cria o usuário no Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      dados.email_contato,
+      dados.senha
+    );
+
+    const user = userCredential.user;
+    const nextId = await getNextUserId();
+
+    // Cria o documento na coleção "Usuario" com o UID do Auth
+    await setDoc(doc(db, "Usuario", user.uid), {
+      id_usuario: nextId,
+      nome_empresa: dados.nome_empresa,
+      cnpj: dados.cnpj,
+      telefone_contato: dados.telefone_contato,
+      nome_responsavel: dados.nome_responsavel,
+      email_contato: dados.email_contato,
+      cargo_responsavel: dados.cargo_responsavel,
+      cidade: dados.cidade,
+      createdAt: new Date(),
+    });
+
+    console.log("✅ Usuário cadastrado com sucesso!");
+    return { success: true, uid: user.uid };
+  } catch (error: any) {
+    console.error("❌ Erro ao cadastrar usuário:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Login do Usuário
+export async function loginUsuario(email: string, password: string) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    console.log("✅ Usuário logado com sucesso:", user.uid);
+    return { success: true, user };
+  } catch (error: any) {
+    console.error("❌ Erro ao fazer login:", error.message);
+
+    let errorMessage = "Erro ao fazer login.";
+    if (error.code === "auth/invalid-email") errorMessage = "E-mail inválido.";
+    if (error.code === "auth/user-not-found") errorMessage = "Usuário não encontrado.";
+    if (error.code === "auth/wrong-password") errorMessage = "Senha incorreta.";
+
+    return { success: false, error: errorMessage };
   }
 }

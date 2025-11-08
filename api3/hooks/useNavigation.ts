@@ -33,6 +33,14 @@ export function useNavigation(){
           router.push("/plans")
      }
 
+     function navigateToLogin(){
+          router.push("/login")
+     }
+
+     function navigateToRegister(){
+          router.push("/register")
+     }
+
      return {
           navigateToLandingPage,
           navigateToFormsFirstPart,
@@ -40,6 +48,8 @@ export function useNavigation(){
           navigateToFormsThirdPart,
           navigateToFormsFourthPart,
           navigateToAiAnswer,
-          navigateToPlans
+          navigateToPlans,
+          navigateToLogin,
+          navigateToRegister
      };
 }

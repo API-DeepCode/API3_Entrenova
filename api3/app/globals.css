@@ -18,3 +18,16 @@ body {
   font-family: var(--font-nunito), sans-serif;
   overflow-x: hidden;
 }
+
+/* Remove o ícone de mostrar senha padrão dos navegadores */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-password-toggle-button {
+  display: none;
+  appearance: none;
+}

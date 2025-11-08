@@ -1,5 +1,3 @@
-// Caminho: api3/app/page.tsx
-
 "use client";
 
 import {
@@ -17,24 +15,37 @@ import { useRouter } from "next/navigation";
 import { ChatToggler } from "@/components/chatToggler/ChatToggler";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Header } from "@/components/globals/Header";
+import { useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  const handleLogout = () => {
+    // 🔒 Aqui você colocará depois: signOut(auth)
+    console.log("Usuário saiu");
+    setUser(null);
+  };
 
   return (
-  <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground bg-gradient-to-b from-background via-background/95 to-background">
+  <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground bg-linear-to-b from-background via-background/95 to-background">
+    <Header
+      user={user}
+      onLogout={handleLogout}
+    />
 
     {/* Seção de Boas-vindas - Bordas estáticas removidas */}
     <section className="mb-20 ml-4 sm:ml-8 md:ml-12 lg:ml-16 pl-8 relative"> {/* Removeu border-l-8 border-primary */}
       {/* Elemento de brilho gradiente (ajustado para ficar mais próximo) */}
-      <div className="absolute -left-2 top-0 bottom-0 w-2 bg-gradient-to-b from-pink-500 via-primary to-purple-400 blur-sm opacity-80 rounded-full" /> {/* Ajustado left, blur, opacity */}
+      <div className="absolute -left-2 top-0 bottom-0 w-2 bg-linear-to-b from-pink-500 via-primary to-purple-400 blur-sm opacity-80 rounded-full" /> {/* Ajustado left, blur, opacity */}
 
       <h1 className="text-4xl sm:text-5xl font-semibold mb-3 text-gray-300 tracking-tight animate-fade-in">
         Bem-vindo ao
       </h1>
 
       <div className="flex items-center gap-4">
-        <h1 className="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(236,72,153,0.3)] hover:drop-shadow-[0_0_15px_rgba(192,132,252,0.6)] transition-all duration-500">
+        <h1 className="text-5xl sm:text-6xl font-extrabold bg-linear-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(236,72,153,0.3)] hover:drop-shadow-[0_0_15px_rgba(192,132,252,0.6)] transition-all duration-500">
           EntrenovaFlix
         </h1>
         <Bot
@@ -78,7 +89,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="text-center mb-24 flex flex-col items-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 max-w-3xl leading-tight bg-gradient-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 max-w-3xl leading-tight bg-linear-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
           Identifique os desafios da sua empresa com precisão
         </h2>
         <p className="text-lg sm:text-xl text-muted-foreground mb-12 max-w-2xl leading-relaxed">
@@ -151,7 +162,7 @@ export default function Home() {
 
         {/* Descobertas */}
         <Card className="bg-card/60 border-border w-full max-w-6xl mb-24 p-10 rounded-2xl shadow-md hover:shadow-primary/20 transition-all backdrop-blur-sm">
-          <CardTitle className="text-center text-3xl font-semibold mb-10 bg-gradient-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
+          <CardTitle className="text-center text-3xl font-semibold mb-10 bg-linear-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
             O que Você vai Descobrir
           </CardTitle>
           <CardContent>
@@ -168,7 +179,7 @@ export default function Home() {
                   key={index}
                   className="flex items-start gap-3 hover:text-foreground transition-colors"
                 >
-                  <CircleCheck className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <CircleCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -178,7 +189,7 @@ export default function Home() {
 
         {/* CTA Final */}
         <section className="text-center mb-16 flex flex-col items-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-linear-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
             Pronto para Transformar sua Empresa?
           </h2>
           <p className="text-lg text-muted-foreground mb-10 max-w-xl leading-relaxed">
