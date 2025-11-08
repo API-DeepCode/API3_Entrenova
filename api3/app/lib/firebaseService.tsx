@@ -1,7 +1,7 @@
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, runTransaction, getDoc, increment } from "firebase/firestore";
 import { db, auth } from "./firebase"; // reutiliza a instância já inicializada em firebase.tsx
 import { User } from "@/lib/type";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 // === COUNTER (transacional) ===
 // Usamos um documento em 'counters/{collectionName}' para armazenar o último ID
@@ -131,23 +131,41 @@ async function getNextUserId(): Promise<number> {
 }
 
 // Cadastra usuários
-export async function cadastrarUsuario(usuario: User) {
+export async function cadastrarUsuario(dados: User) {
   try {
+    // Cria o usuário no Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      dados.email_contato,
+      dados.senha
+    );
+
+    const user = userCredential.user;
     const nextId = await getNextUserId();
 
-    const userRef = doc(db, "Usuario", nextId.toString());
-    await setDoc(userRef, usuario);
+    // Cria o documento na coleção "Usuario" com o UID do Auth
+    await setDoc(doc(db, "Usuario", user.uid), {
+      id_usuario: nextId,
+      nome_empresa: dados.nome_empresa,
+      cnpj: dados.cnpj,
+      telefone_contato: dados.telefone_contato,
+      nome_responsavel: dados.nome_responsavel,
+      email_contato: dados.email_contato,
+      cargo_responsavel: dados.cargo_responsavel,
+      cidade: dados.cidade,
+      createdAt: new Date(),
+    });
 
-    console.log(`Usuário cadastrado com ID: ${nextId}`);
-    return nextId;
-  } catch (error) {
-    console.error("Erro ao cadastrar usuário:", error);
-    throw error;
+    console.log("✅ Usuário cadastrado com sucesso!");
+    return { success: true, uid: user.uid };
+  } catch (error: any) {
+    console.error("❌ Erro ao cadastrar usuário:", error);
+    return { success: false, error: error.message };
   }
 }
 
 // Login do Usuário
-export async function loginUser(email: string, password: string) {
+export async function loginUsuario(email: string, password: string) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;

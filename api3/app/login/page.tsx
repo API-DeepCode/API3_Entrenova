@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { useNavigation } from '@/hooks/useNavigation';
 import { Header } from '@/components/globals/Header';
+import { loginUsuario } from '../lib/firebaseService';
 
 type props = {
   onLogin: (email: string, password: string) => void;
@@ -13,18 +14,27 @@ export default function Login({ onLogin }: props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+    const [user, setUser] = useState<any>(null);
+
+  const handleLogout = () => {
+    // 🔒 Aqui você colocará depois: signOut(auth)
+    console.log("Usuário saiu");
+    setUser(null);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email && password) {
-      onLogin(email, password);
+      loginUsuario(email, password)
+      navigation.navigateToLandingPage()
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 pt-20">
         <Header
-        
+        user={user}
+        onLogout={handleLogout}
         />
 
       <div className="w-full max-w-md">
