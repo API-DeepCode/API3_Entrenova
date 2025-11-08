@@ -54,14 +54,6 @@ Criar um formulário com perguntas específicas fornecidas pela empresa para obt
 | Pronto para Deploy                      | O incremento está estável, versionado no Git, testado e pode ser implantado.                                                                |
 
 
-## 📆Sprints
-| Sprint          |    Período    | Documentação                                     |
-| --------------- | -----------   | ------------------------------------------------ |
-|🔖 **SPRINT 1** | 08/09 - 28/09 |                                                  |
-|🔖 **SPRINT 2** | 06/10 - 26/10 |                                                  |
-|🔖 **SPRINT 3** | 03/11 - 23/11 |                                                  |
-
-
 ## 💻Tecnologias Utilizadas
 <p align="center">
       <img src="Imagens\Tecnologias.png" width="600">
