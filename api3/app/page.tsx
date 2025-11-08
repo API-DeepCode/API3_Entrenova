@@ -17,26 +17,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/globals/Header";
 
-export type Page = 'welcome' | 'login' | 'register';
-
-export type User = {
-  companyName: string;
-  cnpj: string;
-  email: string;
-  phone: string;
-  responsibleName: string;
-  position: string;
-  city: string;
-  state: string;
-  profileImage?: string;
-};
-
 export default function Home() {
   const router = useRouter();
 
   return (
   <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground bg-linear-to-b from-background via-background/95 to-background">
-    <Header/>
+    <Header
+      user={}
+    />
 
     {/* Seção de Boas-vindas - Bordas estáticas removidas */}
     <section className="mb-20 ml-4 sm:ml-8 md:ml-12 lg:ml-16 pl-8 relative"> {/* Removeu border-l-8 border-primary */}
