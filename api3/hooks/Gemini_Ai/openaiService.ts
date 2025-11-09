@@ -1,5 +1,3 @@
-
-
 type PerguntaResposta = {
     pergunta: string;
     resposta: string | number | null;
@@ -70,7 +68,12 @@ Analise atentamente cada resposta e elabore um relatório coerente, objetivo e t
    Use títulos em MAIÚSCULAS para cada seção (ex: "PESSOAS & CULTURA"), e separe as seções com linhas de “---”.
    A primeira parte do texto deve funcionar como um *RESUMO EXECUTIVO GERAL*, seguido das análises por dimensão.
 
-6. *Importante:*
+6. *Detecção*
+    Nas respostas das perguntas da parte "Dimensões, detecte desvios padrões que surgem nas respostas e destaque-os no relatório.
+    
+   
+
+7. *Importante:*
    Não gere recomendações de plano de ação, trilhas de desenvolvimento ou KPIs neste momento.
    Foque apenas no diagnóstico e interpretação das respostas fornecidas.
 
