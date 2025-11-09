@@ -90,4 +90,5 @@ Criar um formulário com perguntas específicas fornecidas pela empresa para obt
 | Team Member    | Fabio Hiromitsu Nawa        | [LinkedIn](https://www.linkedin.com/in/f%C3%A1biohnawa/)                | [GitHub](https://github.com/TechSDW)                                  |
 | Team Member    | Gustavo Felipe Morais       | [LinkedIn](https://www.linkedin.com/in/gustavo-felipe-morais-a6517b327/)| [GitHub](https://github.com/gutibrk74)                                |
 | Team Member    | Josué Olopes                | [LinkedIn](https://www.linkedin.com/in/josué-da-cunha-olopes-08b493212/)| [GitHub](https://github.com/jo-olopes)                                |
-| Team Member    | Igor Andrade                | [LinkedIn](https://www.linkedin.com/in/igor-andrade-b3b434327?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app) | [GitHub](https://github.com/IgorAndrade2024)                          |
+| Team Member    | Igor Andrade                | [LinkedIn](https://www.linkedin.com/in/igor-andrade-b3b434327?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app) | [GitHub](https://github.com/IgorAndrade2024) |
+| Team Member    | Pablo Rafael                |                                                                         | [GitHub](https://github.com/PabloEscobar1993)                          |
