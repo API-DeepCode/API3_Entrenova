@@ -1,5 +1,4 @@
 // Caminho: api3/app/AiAnswer/page.tsx
-
 "use client";
 
 import { useState, useEffect, Suspense } from 'react';

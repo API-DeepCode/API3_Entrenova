@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getResponses } from "./firestoreService.tsx";
-import { gerarRelatorioGemini } from "./openaiService.js";
+import { gerarRelatorioGemini } from "./openaiService";
 
 export async function gerarRelatorio(req: Request, res: Response) {
   try {
