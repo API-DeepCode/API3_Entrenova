@@ -45,6 +45,10 @@ export function useNavigation(){
           router.push("/register")
      }
 
+     function navigateToDashboard(){
+          router.push("/dashboard/comercial")
+     }
+
      return {
           navigateToLandingPage,
           navigateToForms,
@@ -55,6 +59,7 @@ export function useNavigation(){
           navigateToAiAnswer,
           navigateToPlans,
           navigateToLogin,
-          navigateToRegister
+          navigateToRegister,
+          navigateToDashboard
      };
 }
