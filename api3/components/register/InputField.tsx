@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../Register.module.css";
+import styles from "../styles/Register.module.css";
 
 type InputFieldProps = {
   icon: React.ReactNode;

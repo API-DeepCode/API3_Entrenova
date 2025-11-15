@@ -37,7 +37,7 @@ export default function RegisterPage() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -81,11 +81,16 @@ export default function RegisterPage() {
               <InputField icon={<UserCircle />} name="nome_responsavel" value={formData.nome_responsavel} placeholder="Nome do responsável" onChange={handleChange} />
 
               {/* SELECT estilizado */}
-              <SelectField icon={<UserCircle />} name="cargo_responsavel" value={formData.cargo_responsavel} onChange={handleChange}>
-                <option value="" disabled>Selecione o cargo</option>
-                <option value="Gestor">Gestor</option>
-                <option value="Funcionario">Funcionário</option>
-              </SelectField>
+              <SelectField
+                icon={<UserCircle />}
+                name="cargo_responsavel"
+                value={formData.cargo_responsavel}
+                options={["Gestor", "Funcionario"]}
+                placeholder="Selecione o cargo"
+                onChange={(valor, nome) =>
+                  setFormData(prev => ({ ...prev, [nome]: valor }))
+                }
+              />
 
               <InputField icon={<UserCircle />} name="cidade" value={formData.cidade} placeholder="Cidade" onChange={handleChange} />
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
-import styles from "../Register.module.css";
+import styles from "../styles/Register.module.css";
 
 type PasswordFieldProps = {
   label: string;

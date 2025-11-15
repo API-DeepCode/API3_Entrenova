@@ -1,34 +1,67 @@
-import React from "react";
-import styles from "../Register.module.css";
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import styles from "../styles/Register.module.css";
 
 type SelectFieldProps = {
   icon: React.ReactNode;
   name: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  children: React.ReactNode;
+  options: string[];
+  placeholder?: string;
+  onChange: (value: string, name: string) => void;
 };
 
 export function SelectField({
   icon,
   name,
   value,
+  options,
+  placeholder = "Selecione",
   onChange,
-  children,
 }: SelectFieldProps) {
-  return (
-    <div className={styles.inputContainer}>
-      <span className={styles.iconLeft}>{icon}</span>
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-      <select
-        name={name}
-        value={value}
-        onChange={onChange}
-        required
-        className={`${styles.inputBase} ${styles.selectBase}`}
-      >
-        {children}
-      </select>
+  useEffect(() => {
+    function close(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+
+  return (
+    <div className={styles.select_wrapper} ref={dropdownRef}>
+      <div className={styles.select_display} onClick={() => setOpen(!open)}>
+        <div className={styles.select_icon}>{icon}</div>
+
+        <span className={value ? "" : styles.placeholder}>
+          {value || placeholder}
+        </span>
+
+        <ChevronDown className={open ? styles.select_arrow_open : styles.select_arrow} />
+      </div>
+
+      {open && (
+        <div className={styles.select_dropdown}>
+          {options.map((opt) => (
+            <div
+              key={opt}
+              className={styles.select_option}
+              onClick={() => {
+                onChange(opt, name);
+                setOpen(false);
+              }}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

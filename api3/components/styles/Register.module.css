@@ -1,5 +1,7 @@
 .inputContainer {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .inputBase {
@@ -37,4 +39,91 @@
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 40px;
+}
+
+.select_wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Campo principal */
+.select_display {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 14px 40px;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select_display:focus-within {
+  border-color: #ff7fe5;
+  box-shadow: 0 0 8px rgba(255, 127, 229, 0.4);
+}
+
+/* Placeholder */
+.select_display .placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ícone à esquerda */
+.select_icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff7fe5;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+}
+
+/* Seta */
+.select_arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.25s ease;
+  color: #ff7fe5;
+}
+
+.select_arrow_open {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transition: transform 0.25s ease;
+  color: #ff7fe5;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Dropdown */
+.select_dropdown {
+  margin-top: 8px;
+  position: absolute;
+  width: 100%;
+  background: #1a1a1f;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 6px;
+  z-index: 1000;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Opções */
+.select_option {
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.select_option:hover {
+  background: #ff7fe5;
+  color: black;
 }
