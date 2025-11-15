@@ -1,5 +1,79 @@
 "use client";
 
+// Função para recuperar os dados de uma parte específica do formulário
+export const getFormData = (part: number): Partial<FormData> | null => {
+    try {
+        const data = localStorage.getItem(`form_part${part}`);
+        return data ? JSON.parse(data) : null;
+    } catch (error) {
+        console.error(`Erro ao recuperar dados da parte ${part}:`, error);
+        return null;
+    }
+};
+
+// Função para recuperar todos os dados do formulário
+export const getCompleteFormData = (): FormData => {
+    try {
+        // Tenta recuperar dados completos primeiro
+        const complete = localStorage.getItem('form_complete');
+        if (complete) {
+            return JSON.parse(complete);
+        }
+
+        // Se não existir, combina todas as partes
+        const part1 = getFormData(1) || {};
+        const part2 = getFormData(2) || {};
+        const part3 = getFormData(3) || {};
+        const part4 = getFormData(4) || {};
+
+        const completeData = {
+            ...part1,
+            ...part2,
+            ...part3,
+            ...part4
+        };
+
+        // Salva dados completos para uso futuro
+        localStorage.setItem('form_complete', JSON.stringify(completeData));
+        return completeData;
+    } catch (error) {
+        console.error('Erro ao recuperar dados completos:', error);
+        return {} as FormData;
+    }
+};
+
+// Analisa as respostas do formulário e retorna pontos fortes e fracos.
+export function analyzeForm(
+    questionsByDimension: Record<string, { question: string; options: string[] }[]>,
+    answers: Record<string, string | string[]>
+): {
+    strengths: { question: string; answer: string; score: number }[];
+    weaknesses: { question: string; answer: string; score: number }[];
+} {
+    const strengths: { question: string; answer: string; score: number }[] = [];
+    const weaknesses: { question: string; answer: string; score: number }[] = [];
+
+    Object.values(questionsByDimension).forEach((questions) => {
+        questions.forEach((q) => {
+            const userAnswer = answers[q.question];
+            if (!userAnswer || !Array.isArray(q.options) || q.options.length < 2) return;
+
+            if (typeof userAnswer === "string" && q.options.length >= 2) {
+                const idx = q.options.findIndex(opt => opt === userAnswer);
+                if (idx !== -1) {
+                    const score = 4 - idx;
+                    if (score >= 3) {
+                        strengths.push({ question: q.question, answer: userAnswer, score });
+                    } else {
+                        weaknesses.push({ question: q.question, answer: userAnswer, score });
+                    }
+                }
+            }
+        });
+    });
+    return { strengths, weaknesses };
+}
+
 interface FormData {
     // Parte 1
     num_colaboradores?: string;
@@ -61,43 +135,6 @@ export const saveFormData = (part: number, data: Partial<FormData>) => {
         }));
         
         console.log(`Parte ${part} salva com sucesso`);
-        return true;
-    } catch (error) {
-        console.error('Erro ao salvar dados do formulário:', error);
-        return false;
-    }
-};
-
-export const getFormData = (part: number): Partial<FormData> | null => {
-    try {
-        const data = localStorage.getItem(`form_part${part}`);
-        return data ? JSON.parse(data) : null;
-    } catch (error) {
-        console.error(`Erro ao recuperar dados da parte ${part}:`, error);
-        return null;
-    }
-};
-
-export const getCompleteFormData = (): FormData => {
-    try {
-        // Tenta recuperar dados completos primeiro
-        const complete = localStorage.getItem('form_complete');
-        if (complete) {
-            return JSON.parse(complete);
-        }
-
-        // Se não existir, combina todas as partes
-        const part1 = getFormData(1) || {};
-        const part2 = getFormData(2) || {};
-        const part3 = getFormData(3) || {};
-        const part4 = getFormData(4) || {};
-
-        const completeData = {
-            ...part1,
-            ...part2,
-            ...part3,
-            ...part4
-        };
 
         // Salva dados completos para uso futuro
         localStorage.setItem('form_complete', JSON.stringify(completeData));
