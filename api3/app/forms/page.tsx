@@ -5,14 +5,15 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import ProgressBar from "@/components/forms/ProgressBar";
 import styles from "@/components/styles/Forms.module.css";
-import NavButton from "@/components/globals/NavButton";
 import { DimensionQuestions, FormsQuestions } from "@/lib/type";
 import QuestionDisplay from "@/components/forms/QuestionDisplay";
 import { saveFormData } from "@/app/lib/formStorage";
+import { useNavigation } from "@/hooks/useNavigation";
 
 // Single unified form component that shows one question at a time
 export default function UnifiedForm(){
   const router = useRouter();
+  const navigation = useNavigation();
 
   // --- Part 1 (Perfil da Empresa)
   const part1: FormsQuestions[] = [
@@ -120,15 +121,13 @@ export default function UnifiedForm(){
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentQuestion = unified[current];
-
   const answeredCount = Object.values(answers).filter(a => a !== undefined && a !== null && a !== '' && (!Array.isArray(a) || a.length > 0)).length;
 
-  // Generate dynamic title
   const getTitle = () => {
     if (!currentQuestion) return "";
     if (currentQuestion.part === 1) return "Perfil da Empresa";
     if (currentQuestion.part === 2) return "Desafios e Objetivos";
-    if (currentQuestion.part === 3) return `Mini-Diagnóstico das Dimensões: ${currentQuestion.dimension ?? ""}`;
+    if (currentQuestion.part === 3) return `Mini-Diagnóstico: ${currentQuestion.dimension ?? ""}`;
     if (currentQuestion.part === 4) return "Investimento, Inovação & Urgência";
     return "";
   };
@@ -138,7 +137,6 @@ export default function UnifiedForm(){
     setAnswers(prev => ({ ...prev, [question]: answer }));
   };
 
-  // Helper: find all questions of a given part and return answers for saving
   const collectPartAnswers = (part: number) => {
     const partQs = unified.filter(q => q.part === part);
     const result: Record<string, any> = {};
@@ -148,7 +146,6 @@ export default function UnifiedForm(){
     return result;
   };
 
-  // Custom mappers for compatibility with your saveFormData usage
   const mapAndSavePart = async (part: number) => {
     if (part === 1){
       const a = collectPartAnswers(1);
@@ -236,7 +233,6 @@ export default function UnifiedForm(){
     const needsAnswer = q.type === 'open' || q.type === 'slider' || q.type === 'default' || q.type === 'multiple';
     if (needsAnswer && (ans === undefined || ans === null || ans === '' || (Array.isArray(ans) && ans.length === 0))) return;
 
-    // if this is the last question of a part, save that part
     const isLastOfPart = (i: number) => {
       const part = unified[i].part;
       for (let j = i+1; j < unified.length; j++){
@@ -251,8 +247,7 @@ export default function UnifiedForm(){
 
     if (current < unified.length - 1) setCurrent(c => c+1);
     else {
-      // finished all questions — if part 4 was already saved on its last question, navigate to AiAnswer
-      router.push('/AiAnswer');
+      navigation.navigateToAiAnswer();
     }
   };
 
@@ -267,6 +262,13 @@ export default function UnifiedForm(){
     const part = currentQuestion.part;
     return `Etapa ${part} de 4`;
   };
+
+  const isCurrentAnswered = answers[unified[current].question] !== undefined &&
+                           answers[unified[current].question] !== "" &&
+                           (
+                              !Array.isArray(answers[unified[current].question]) ||
+                              answers[unified[current].question].length > 0
+                           );
 
   return (
     <section className={styles.display}>
@@ -290,13 +292,13 @@ export default function UnifiedForm(){
         )}
 
         <div className={styles.navigation_area}>
-          <button className={styles.pink_button} onClick={goBack} disabled={current===0}>
+          <button className={styles.active_button} onClick={goBack} disabled={current===0}>
             <ArrowLeft />
             <p>Voltar</p>
           </button>
 
           <button
-            className={answeredCount >= totalQuestions ? styles.pink_button : styles.pink_button}
+            className={isCurrentAnswered ? styles.active_button : styles.unactive_button}
             onClick={goNext}
           >
             <p>{current < unified.length - 1 ? 'Próximo' : 'Finalizar'}</p>
