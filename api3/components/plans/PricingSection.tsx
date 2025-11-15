@@ -1,8 +1,11 @@
+// Caminho: /api3/components/plans/PricingSection.tsx
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import Link from "next/link"; // Importado para os links
 
 interface PricingTier {
   name: string;
@@ -111,14 +114,22 @@ export function PricingSection() {
                 ))}
               </ul>
 
+              {/* ✅ ALTERAÇÃO AQUI: Botões agora são links (exceto Enterprise) */}
               <Button
+                asChild={tier.price !== "Personalizado"} // Só será um Link se NÃO for "Personalizado"
                 className={`w-full text-lg font-medium transition-all ${
                   tier.highlighted
                     ? "bg-pink-500 hover:bg-pink-600 text-white shadow-md"
                     : "bg-white/10 hover:bg-white/20 text-white border border-white/30"
                 }`}
               >
-                {tier.price === "Personalizado" ? "Fale Conosco" : "Começar Agora"}
+                {tier.price === "Personalizado" ? (
+                  <span>Fale Conosco</span> // Continua como um botão normal (sem link)
+                ) : (
+                  <Link href="/dashboard/comercial">
+                    Começar Agora
+                  </Link> // Os outros viram links
+                )}
               </Button>
             </CardContent>
           </Card>

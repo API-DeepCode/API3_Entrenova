@@ -1,3 +1,5 @@
+// Caminho: /api3/app/page.tsx
+
 "use client";
 
 import {
@@ -29,34 +31,35 @@ export default function Home() {
   };
 
   return (
-  <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground bg-linear-to-b from-background via-background/95 to-background">
-    <Header
-      user={user}
-      onLogout={handleLogout}
-    />
+    // ✅ CORREÇÃO AQUI: Classes de fundo e altura mínima aplicadas
+    <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground min-h-screen bg-gradient-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]">
+      <Header
+        user={user}
+        onLogout={handleLogout}
+      />
 
-    {/* Seção de Boas-vindas - Bordas estáticas removidas */}
-    <section className="mb-20 ml-4 sm:ml-8 md:ml-12 lg:ml-16 pl-8 relative"> {/* Removeu border-l-8 border-primary */}
-      {/* Elemento de brilho gradiente (ajustado para ficar mais próximo) */}
-      <div className="absolute -left-2 top-0 bottom-0 w-2 bg-linear-to-b from-pink-500 via-primary to-purple-400 blur-sm opacity-80 rounded-full" /> {/* Ajustado left, blur, opacity */}
+      {/* Seção de Boas-vindas - Bordas estáticas removidas */}
+      <section className="mb-20 ml-4 sm:ml-8 md:ml-12 lg:ml-16 pl-8 relative"> {/* Removeu border-l-8 border-primary */}
+        {/* Elemento de brilho gradiente (ajustado para ficar mais próximo) */}
+        <div className="absolute -left-2 top-0 bottom-0 w-2 bg-linear-to-b from-pink-500 via-primary to-purple-400 blur-sm opacity-80 rounded-full" /> {/* Ajustado left, blur, opacity */}
 
-      <h1 className="text-4xl sm:text-5xl font-semibold mb-3 text-gray-300 tracking-tight animate-fade-in">
-        Bem-vindo ao
-      </h1>
-
-      <div className="flex items-center gap-4">
-        <h1 className="text-5xl sm:text-6xl font-extrabold bg-linear-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(236,72,153,0.3)] hover:drop-shadow-[0_0_15px_rgba(192,132,252,0.6)] transition-all duration-500">
-          EntrenovaFlix
+        <h1 className="text-4xl sm:text-5xl font-semibold mb-3 text-gray-300 tracking-tight animate-fade-in">
+          Bem-vindo ao
         </h1>
-        <Bot
-          size={58}
-          className="text-primary shrink-0 drop-shadow-[0_0_12px_rgba(236,72,153,0.4)] animate-pulse-slow"
-          aria-hidden="true"
-        />
-      </div>
 
-      {/* Animações CSS (mantidas) */}
-      <style jsx>{`@keyframes fade-in {
+        <div className="flex items-center gap-4">
+          <h1 className="text-5xl sm:text-6xl font-extrabold bg-linear-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(236,72,153,0.3)] hover:drop-shadow-[0_0_15px_rgba(192,132,252,0.6)] transition-all duration-500">
+            EntrenovaFlix
+          </h1>
+          <Bot
+            size={58}
+            className="text-primary shrink-0 drop-shadow-[0_0_12px_rgba(236,72,153,0.4)] animate-pulse-slow"
+            aria-hidden="true"
+          />
+        </div>
+
+        {/* Animações CSS (mantidas) */}
+        <style jsx>{`@keyframes fade-in {
 
       from { opacity: 0; transform: translateY(10px); }
 
@@ -83,8 +86,8 @@ export default function Home() {
       animation: pulse-slow 3s ease-in-out infinite;
 
     }
-      `}</style>
-    </section>
+        `}</style>
+      </section>
 
 
       {/* Hero Section */}
@@ -116,7 +119,7 @@ export default function Home() {
             asChild
             className="text-base font-medium transition-all duration-300 border-primary/40 text-primary hover:border-primary hover:bg-primary/10 hover:text-primary shadow-sm hover:shadow-primary/20"
           >
-            <Link href="/cadastro" aria-label="Ver planos disponíveis">
+            <Link href="/plans" aria-label="Ver planos disponíveis">
               Ver Planos
             </Link>
           </Button>
