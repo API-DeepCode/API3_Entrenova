@@ -9,6 +9,10 @@ export function useNavigation(){
           router.push("/")
      }
 
+     function navigateToForms(){
+          router.push("/forms");
+     }
+
      function navigateToFormsFirstPart(){
           router.push("/forms/firstPart");
      }
@@ -43,6 +47,7 @@ export function useNavigation(){
 
      return {
           navigateToLandingPage,
+          navigateToForms,
           navigateToFormsFirstPart,
           navigateToFormsSecondPart,
           navigateToFormsThirdPart,

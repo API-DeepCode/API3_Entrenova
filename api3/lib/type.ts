@@ -5,6 +5,10 @@ export interface FormsQuestions{
     type: "default" | "multiple" | "slider" | "open";
 }
 
+export interface DimensionQuestions extends FormsQuestions{
+    dimension: "Pessoas e Cultura" | "Estrutura e Operações" | "Mercado e Clientes" | "Direção e Futuro";
+}
+
 export interface User{
     cargo_responsavel: string;
     cidade: string;

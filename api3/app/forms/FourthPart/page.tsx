@@ -1,5 +1,3 @@
-// Caminho: api3/app/forms/FourthPart/page.tsx
-
 "use client"
 
 import { ArrowRight, ArrowLeft } from "lucide-react";
