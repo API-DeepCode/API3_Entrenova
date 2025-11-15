@@ -137,7 +137,7 @@ async function getNextUserId(): Promise<number> {
 // Cadastra usuários
 export async function cadastrarUsuario(dados: User) {
   try {
-    // Cria o usuário no Firebase Auth
+    // 1. Criar usuário no Auth
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       dados.email_contato,
@@ -147,7 +147,7 @@ export async function cadastrarUsuario(dados: User) {
     const user = userCredential.user;
     const nextId = await getNextUserId();
 
-    // Cria o documento na coleção "Usuario" com o UID do Auth
+    // 2. Criar documento no Firestore
     await setDoc(doc(db, "Usuario", user.uid), {
       id_usuario: nextId,
       nome_empresa: dados.nome_empresa,
@@ -155,28 +155,43 @@ export async function cadastrarUsuario(dados: User) {
       telefone_contato: dados.telefone_contato,
       nome_responsavel: dados.nome_responsavel,
       email_contato: dados.email_contato,
-      cargo_responsavel: dados.cargo_responsavel,
+      cargo_responsavel: "Admin",
       cidade: dados.cidade,
     });
 
     console.log("Usuário cadastrado com sucesso!");
     return { success: true, uid: user.uid };
+
   } catch (error: any) {
     console.error("Erro ao cadastrar usuário:", error);
     return { success: false, error: error.message };
   }
 }
 
-// Login do Usuário
 export async function loginUsuario(email: string, password: string) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    const firebaseUser = userCredential.user;
 
-    console.log("✅ Usuário logado com sucesso:", user.uid);
-    return { success: true, user };
+    console.log("Usuário logado:", firebaseUser.uid);
+
+    // 2. Buscar o usuário na coleção correta
+    const userRef = doc(db, "Usuario", firebaseUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      return { success: false, error: "Dados do usuário não encontrados." };
+    }
+
+    const userData = userSnap.data() as User;
+
+    // 3. Salvar no localStorage
+    localStorage.setItem("usuarioLogado", JSON.stringify(userData));
+
+    return { success: true, user: userData };
+
   } catch (error: any) {
-    console.error("❌ Erro ao fazer login:", error.message);
+    console.error("Erro ao fazer login:", error.message);
 
     let errorMessage = "Erro ao fazer login.";
     if (error.code === "auth/invalid-email") errorMessage = "E-mail inválido.";
