@@ -10,7 +10,7 @@ export interface DimensionQuestions extends FormsQuestions{
 }
 
 export interface User{
-    cargo_responsavel: string;
+    cargo_responsavel: "Admin" | "Gestao" | "Funcionario";
     cidade: string;
     cnpj: string;
     email_contato: string;
