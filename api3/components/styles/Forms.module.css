@@ -83,6 +83,11 @@
     justify-content: space-between;
 }
 
+.navigation_back{
+    display: flex;
+    gap: 1em;
+}
+
 .scale_container {
     display: flex;
     flex-direction: column;

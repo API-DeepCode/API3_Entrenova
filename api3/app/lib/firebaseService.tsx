@@ -155,7 +155,7 @@ export async function cadastrarUsuario(dados: User) {
       telefone_contato: dados.telefone_contato,
       nome_responsavel: dados.nome_responsavel,
       email_contato: dados.email_contato,
-      cargo_responsavel: "Admin",
+      cargo_responsavel: dados.cargo_responsavel,
       cidade: dados.cidade,
     });
 

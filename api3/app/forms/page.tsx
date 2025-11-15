@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, House } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import ProgressBar from "@/components/forms/ProgressBar";
@@ -11,7 +11,7 @@ import { saveFormData } from "@/app/lib/formStorage";
 import { useNavigation } from "@/hooks/useNavigation";
 
 // Single unified form component that shows one question at a time
-export default function UnifiedForm(){
+export default function Forms(){
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -292,10 +292,20 @@ export default function UnifiedForm(){
         )}
 
         <div className={styles.navigation_area}>
-          <button className={styles.active_button} onClick={goBack} disabled={current===0}>
-            <ArrowLeft />
-            <p>Voltar</p>
-          </button>
+          <div className={styles.navigation_back}>
+            <button
+              className={styles.active_button}
+              onClick={() => navigation.navigateToLandingPage()}
+            >
+              <House />
+              <p>Início</p>
+            </button>
+
+            <button className={styles.active_button} onClick={goBack} disabled={current===0}>
+              <ArrowLeft />
+              <p>Voltar</p>
+            </button>
+          </div>
 
           <button
             className={isCurrentAnswered ? styles.active_button : styles.unactive_button}
