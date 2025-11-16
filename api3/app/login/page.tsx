@@ -14,28 +14,26 @@ export default function Login({ onLogin }: props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
-    const [user, setUser] = useState<any>(null);
 
-  const handleLogout = () => {
-    // 🔒 Aqui você colocará depois: signOut(auth)
-    console.log("Usuário saiu");
-    setUser(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (email && password) {
-      loginUsuario(email, password)
-      navigation.navigateToLandingPage()
+      const response = await loginUsuario(email, password);
+
+      if (response.success) {
+        localStorage.setItem("usuarioLogado", JSON.stringify(response.user));
+
+        navigation.navigateToLandingPage();
+      } else {
+        alert(response.error);
+      }
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 pt-20">
-        <Header
-        user={user}
-        onLogout={handleLogout}
-        />
+      <Header/>
 
       <div className="w-full max-w-md">
         <div className="backdrop-blur-md bg-white/10 rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(75,0,255,0.37)] border border-white/20">

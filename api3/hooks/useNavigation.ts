@@ -9,6 +9,10 @@ export function useNavigation(){
           router.push("/")
      }
 
+     function navigateToForms(){
+          router.push("/forms");
+     }
+
      function navigateToFormsFirstPart(){
           router.push("/forms/firstPart");
      }
@@ -41,8 +45,13 @@ export function useNavigation(){
           router.push("/register")
      }
 
+     function navigateToDashboard(){
+          router.push("/dashboard/comercial")
+     }
+
      return {
           navigateToLandingPage,
+          navigateToForms,
           navigateToFormsFirstPart,
           navigateToFormsSecondPart,
           navigateToFormsThirdPart,
@@ -50,6 +59,7 @@ export function useNavigation(){
           navigateToAiAnswer,
           navigateToPlans,
           navigateToLogin,
-          navigateToRegister
+          navigateToRegister,
+          navigateToDashboard
      };
 }

@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     // ✅ CORREÇÃO AQUI: Classes de fundo e altura mínima aplicadas
-    <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground min-h-screen bg-gradient-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]">
+    <main className="pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground min-h-screen bg-linear-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]">
       <Header
         user={user}
         onLogout={handleLogout}
@@ -102,7 +102,7 @@ export default function Home() {
         <div className="flex flex-wrap gap-5 justify-center">
           <Button
             size="lg"
-            onClick={() => router.push("/forms/firstPart")}
+            onClick={() => router.push("/forms")}
             aria-label="Preencher o formulário de diagnóstico"
             className="group text-base font-medium shadow-lg transition-all duration-300 hover:shadow-primary/40 hover:scale-[1.03] active:scale-[0.98]"
           >
@@ -200,7 +200,7 @@ export default function Home() {
           </p>
           <Button
             size="lg"
-            onClick={() => router.push("/forms/firstPart")}
+            onClick={() => router.push("/forms")}
             aria-label="Iniciar o diagnóstico agora"
             className="group text-base font-medium shadow-lg transition-all duration-300 hover:shadow-primary/40 hover:scale-[1.03] active:scale-[0.98]"
           >
