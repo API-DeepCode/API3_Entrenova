@@ -18,11 +18,26 @@ import { ChatToggler } from "@/components/chatToggler/ChatToggler";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/globals/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import TestimonialsCarousel from "@/components/globals/TestimonialsCarousel";
 
 export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [hasProgress, setHasProgress] = useState(false);
+
+  useEffect(() => {
+    try {
+      const p1 = localStorage.getItem("form_part1");
+      const p2 = localStorage.getItem("form_part2");
+      const p3 = localStorage.getItem("form_part3");
+      const p4 = localStorage.getItem("form_part4");
+      const complete = localStorage.getItem("form_complete");
+      setHasProgress(Boolean(p1 || p2 || p3 || p4 || complete));
+    } catch {
+      setHasProgress(false);
+    }
+  }, []);
 
   const handleLogout = () => {
     // 🔒 Aqui você colocará depois: signOut(auth)
@@ -91,7 +106,10 @@ export default function Home() {
 
 
       {/* Hero Section */}
-      <section className="text-center mb-24 flex flex-col items-center">
+      <section className="relative text-center mb-24 flex flex-col items-center overflow-hidden">
+        {/* Decorative gradient blobs (subtle, no animation) */}
+        <div aria-hidden className="pointer-events-none absolute -z-10 top-[-120px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-linear-to-tr from-primary/25 via-[#ff4687]/15 to-transparent blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -z-10 bottom-[-160px] right-[-100px] w-[520px] h-[520px] rounded-full bg-linear-to-tr from-[#4d2cc4]/25 via-primary/10 to-transparent blur-3xl" />
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 max-w-3xl leading-tight bg-linear-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
           Identifique os desafios da sua empresa com precisão
         </h2>
@@ -123,6 +141,29 @@ export default function Home() {
               Ver Planos
             </Link>
           </Button>
+          {hasProgress && (
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => router.push("/forms")}
+              className="text-sm font-medium px-3 py-2 bg-white/5 border border-white/10 text-white/90 hover:bg-white/10 rounded-full"
+              aria-label="Continuar de onde parou"
+            >
+              Continuar de onde parou
+            </Button>
+          )}
+        </div>
+
+        {/* Tempo estimado */}
+        <div className="mt-4 text-sm text-white/70">
+          <span className="align-middle">Leva cerca de</span>
+          <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white bg-linear-to-r from-[#ff4687] to-[#4d2cc4]">~10 minutos</span>
+        </div>
+
+        {/* Social proof (logos + depoimentos) */}
+        <div className="mt-10 opacity-95">
+          <p className="text-xs text-white/70 mb-3">Confiado por equipes</p>
+          <TestimonialsCarousel />
         </div>
       </section>
 
@@ -145,7 +186,7 @@ export default function Home() {
           ].map((part, index) => (
             <Card
               key={index}
-              className="bg-card/60 border-border hover:border-primary/60 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/20 flex flex-col group rounded-2xl backdrop-blur-sm"
+              className="bg-card/60 border-border transition-all duration-300 transform hover:-translate-y-1.5 hover:rotate-[0.25deg] hover:shadow-lg hover:shadow-primary/25 hover:border-primary/60 flex flex-col group rounded-2xl backdrop-blur-sm"
             >
               <CardHeader className="pb-3">
                 <div className="relative w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">

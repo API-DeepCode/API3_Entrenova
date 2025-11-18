@@ -29,8 +29,9 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="relative w-full max-w-7xl mx-auto px-6 py-24">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent rounded-3xl blur-3xl opacity-70 -z-10" />
+    <section className="relative w-full max-w-7xl mx-auto px-6 py-24 overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute -z-10 top-[-140px] right-[-100px] w-[520px] h-[520px] rounded-full bg-linear-to-tr from-[#4d2cc4]/25 via-primary/15 to-transparent blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -z-10 bottom-[-140px] left-[-80px] w-[460px] h-[460px] rounded-full bg-linear-to-tr from-primary/20 via-[#ff4687]/15 to-transparent blur-3xl" />
 
       <div className="text-center mb-20">
         <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-400 mb-6">
@@ -46,7 +47,7 @@ export function HowItWorks() {
         {steps.map((step, index) => (
           <div
             key={index}
-            className="relative group bg-gradient-to-b from-card/60 to-card/40 border border-border rounded-2xl p-8 flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_0_25px_-5px_var(--tw-shadow-color)] hover:shadow-primary/40"
+            className="relative group bg-gradient-to-b from-card/60 to-card/40 border border-border rounded-2xl p-8 flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3 hover:rotate-[0.25deg] hover:shadow-[0_0_25px_-5px_var(--tw-shadow-color)] hover:shadow-primary/40"
           >
             {/* Linha conectando os passos */}
             {index < steps.length - 1 && (

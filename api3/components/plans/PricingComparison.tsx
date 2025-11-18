@@ -104,7 +104,7 @@ export function PricingComparison() {
                 <th key={plan.name} className="p-4 min-w-52 text-white">
                   <div className="flex flex-col items-center gap-2">
                     {plan.popular && (
-                      <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      <span className="bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] text-white px-3 py-1 rounded-full text-xs font-semibold">
                         Mais Popular
                       </span>
                     )}
@@ -140,7 +140,15 @@ export function PricingComparison() {
               <td className="p-4"></td>
               {plans.map((plan) => (
                 <td key={plan.name} className="p-4">
-                  <Button className="w-full" variant={plan.variant}>
+                  <Button
+                    className={
+                      "w-full transition-all " +
+                      (plan.popular
+                        ? "bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] hover:from-[#ff4687]/90 hover:to-[#4d2cc4]/90 text-white"
+                        : "")
+                    }
+                    variant={plan.variant}
+                  >
                     {plan.cta}
                   </Button>
                 </td>

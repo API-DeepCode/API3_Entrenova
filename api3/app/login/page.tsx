@@ -1,6 +1,6 @@
 "use client"
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { useNavigation } from '@/hooks/useNavigation';
 import { Header } from '@/components/globals/Header';
@@ -32,67 +32,75 @@ export default function Login({ onLogin }: props) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 pt-20">
-      <Header/>
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12">
+      {/* Background gradient consistent with site */}
+      <div aria-hidden className="fixed inset-0 -z-10 bg-gradient-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]" />
+      <Header />
 
-      <div className="w-full max-w-md">
-        <div className="backdrop-blur-md bg-white/10 rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(75,0,255,0.37)] border border-white/20">
-          <h1 className="text-3xl text-center mb-2 bg-linear-to-r from-[#FF7FE5] to-[#FFA3E8] bg-clip-text text-transparent">
-            Bem-vindo de volta!
-          </h1>
-          <p className="text-center text-white/70 mb-8">
-            Entre com suas credenciais
-          </p>
+      <div className="w-full max-w-md mt-10">
+        <div className="rounded-3xl p-8 md:p-10 border border-white/15 bg-black/30 backdrop-blur-xl shadow-[0_0_1px_1px_rgba(255,255,255,0.08),0_12px_40px_-8px_rgba(0,0,0,0.55)] space-y-7">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-semibold tracking-tight bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5] bg-clip-text text-transparent">
+              Bem-vindo de volta
+            </h1>
+            <p className="text-sm text-white/70">
+              Acesse para continuar sua jornada
+            </p>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-white/90 mb-2 text-sm">
+            <div className="space-y-2">
+              <label className="block text-xs font-medium tracking-wide uppercase text-white/60">
                 E-mail
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#FF7FE5]/50" />
+                <Mail className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${email ? 'text-[#6b54e5]' : 'text-white/40'}`} />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white/5 border border-white/30 rounded-xl px-10 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF7FE5] focus:ring-2 focus:ring-[#FF7FE5]/20 transition-all"
+                  className={`w-full rounded-xl px-10 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#6b54e5] focus:ring-2 focus:ring-[#6b54e5]/30 transition border ${email ? 'bg-[#22174a]/70 border-[#6b54e5]/50 shadow-[0_0_0_1px_rgba(107,84,229,0.4)]' : 'bg-white/5 border-white/15'}`}
                   placeholder="seu@email.com"
                   required
+                  autoComplete="email"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-white/90 mb-2 text-sm">
+            <div className="space-y-2">
+              <label className="block text-xs font-medium tracking-wide uppercase text-white/60">
                 Senha
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#FF7FE5]/50" />
+                <Lock className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${password ? 'text-[#6b54e5]' : 'text-white/40'}`} />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/30 rounded-xl px-10 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF7FE5] focus:ring-2 focus:ring-[#FF7FE5]/20 transition-all"
+                  className={`w-full rounded-xl px-10 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#6b54e5] focus:ring-2 focus:ring-[#6b54e5]/30 transition border ${password ? 'bg-[#22174a]/70 border-[#6b54e5]/50 shadow-[0_0_0_1px_rgba(107,84,229,0.4)]' : 'bg-white/5 border-white/15'}`}
                   placeholder="••••••••"
                   required
+                  autoComplete="current-password"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 bg-linear-to-r from-[#FF7FE5] to-[#FFA3E8] rounded-xl text-white hover:shadow-[0_0_25px_rgba(255,127,229,0.6)] transition-all duration-300 transform hover:scale-[1.02] mt-6"
+              className="group w-full relative overflow-hidden rounded-xl py-3 font-medium tracking-wide text-white bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b54e5]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent transition shadow-sm hover:shadow-[#6b54e5]/30 hover:scale-[1.01] active:scale-[0.99]"
             >
-              Entrar
+              <span className="relative z-10">Entrar</span>
+              <span aria-hidden className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-r from-white/0 via-white/40 to-white/0 transition" />
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="pt-2 text-center">
             <button
               onClick={navigation.navigateToRegister}
-              className="text-[#FFA3E8] hover:text-white transition-colors text-sm"
+              type="button"
+              className="text-sm font-medium text-[#6b54e5] hover:text-white transition-colors"
             >
-              Ainda não tem conta? <span className="underline">Cadastre-se</span>
+              Ainda não tem conta? <span className="underline decoration-[#6b54e5] underline-offset-4">Cadastre-se</span>
             </button>
           </div>
         </div>

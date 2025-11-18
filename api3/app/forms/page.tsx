@@ -4,11 +4,11 @@ import { ArrowRight, ArrowLeft, House } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import ProgressBar from "@/components/forms/ProgressBar";
-import styles from "@/components/styles/Forms.module.css";
 import { DimensionQuestions, FormsQuestions } from "@/lib/type";
 import QuestionDisplay from "@/components/forms/QuestionDisplay";
 import { saveFormData } from "@/app/lib/formStorage";
 import { useNavigation } from "@/hooks/useNavigation";
+import { Button } from "@/components/ui/button";
 
 // Single unified form component that shows one question at a time
 export default function Forms(){
@@ -122,6 +122,15 @@ export default function Forms(){
 
   const currentQuestion = unified[current];
   const answeredCount = Object.values(answers).filter(a => a !== undefined && a !== null && a !== '' && (!Array.isArray(a) || a.length > 0)).length;
+  const remainingCount = Math.max(0, totalQuestions - answeredCount);
+  const percent = Math.round((answeredCount / totalQuestions) * 100);
+  const currentPart = currentQuestion?.part ?? 1;
+  const steps = [
+    { id: 1, label: "Perfil" },
+    { id: 2, label: "Desafios" },
+    { id: 3, label: "Dimensões" },
+    { id: 4, label: "Inovação" },
+  ];
 
   const getTitle = () => {
     if (!currentQuestion) return "";
@@ -271,51 +280,113 @@ export default function Forms(){
                            );
 
   return (
-    <section className={styles.display}>
-      <div className={styles.title}>
-        <div className={styles.information}>
-          <h1>{getTitle()}</h1>
-          <h2>{getSubtitle()}</h2>
-        </div>
-
-        <ProgressBar current={answeredCount} total={totalQuestions} />
-      </div>
-
-      <div className={styles.questions_table}>
-        {/* Render QuestionDisplay for the single current question (passed as an array of one) */}
-        {currentQuestion && (
-          <QuestionDisplay
-            questions={[currentQuestion]}
-            answers={answers}
-            handleSelect={handleSelect}
-          />
-        )}
-
-        <div className={styles.navigation_area}>
-          <div className={styles.navigation_back}>
-            <button
-              className={styles.active_button}
-              onClick={() => navigation.navigateToLandingPage()}
-            >
-              <House />
-              <p>Início</p>
-            </button>
-
-            <button className={styles.active_button} onClick={goBack} disabled={current===0}>
-              <ArrowLeft />
-              <p>Voltar</p>
-            </button>
+    <section className="relative max-w-5xl mx-auto px-4 py-8 sm:py-10">
+      {/* Full-page background gradient matching landing */}
+      <div aria-hidden className="fixed inset-0 -z-10 bg-linear-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]" />
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 md:gap-4">
+          <div className="px-2 sm:px-4">
+            <h1 className="text-xl font-semibold leading-tight">{getTitle()}</h1>
+            <h2 className="text-sm text-muted-foreground">{getSubtitle()}</h2>
           </div>
 
-          <button
-            className={isCurrentAnswered ? styles.active_button : styles.unactive_button}
-            onClick={goNext}
-          >
-            <p>{current < unified.length - 1 ? 'Próximo' : 'Finalizar'}</p>
-            <ArrowRight />
-          </button>
+          <div className="w-full md:flex-1 md:max-w-md">
+            <ProgressBar current={answeredCount} total={totalQuestions} />
+            <div className="mt-1.5 text-xs sm:text-sm flex items-center justify-between">
+              <span className="text-foreground/90">
+                Respondidas {answeredCount} de {totalQuestions} ({percent}%)
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <span className="text-foreground/90">Faltam</span>
+                <span className="px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold text-white bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5] shadow-xs">
+                  {remainingCount}
+                </span>
+              </span>
+            </div>
+
+            {/* Stepper */}
+            <div className="mt-3 hidden sm:flex items-center gap-3">
+              {steps.map((s, idx) => {
+                const isCompleted = s.id < currentPart;
+                const isActive = s.id === currentPart;
+                return (
+                  <div className="flex items-center gap-3" key={s.id}>
+                    <div
+                      className={[
+                        "size-7 shrink-0 rounded-full grid place-items-center text-xs font-semibold",
+                        isCompleted
+                          ? "text-white bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5]"
+                          : isActive
+                            ? "text-white bg-primary ring-2 ring-primary/30"
+                            : "text-white/70 bg-white/10 border border-white/10",
+                      ].join(" ")}
+                      aria-current={isActive ? "step" : undefined}
+                    >
+                      {s.id}
+                    </div>
+                    <div className="text-xs">
+                      <div className={isActive ? "text-white" : isCompleted ? "text-white/80" : "text-white/60"}>{s.label}</div>
+                    </div>
+                    {idx < steps.length - 1 && (
+                      <div
+                        className={[
+                          "h-0.5 w-8 sm:w-10 rounded-full",
+                          s.id < currentPart ? "bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5]" : "bg-white/15",
+                        ].join(" ")}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-linear-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d] p-4 sm:p-6 shadow-md">
+          {currentQuestion && (
+            <div key={current} className="animate-fade-slide">
+              <QuestionDisplay
+                questions={[currentQuestion]}
+                answers={answers}
+                handleSelect={handleSelect}
+              />
+            </div>
+          )}
+
+          <div className="mt-6 flex items-center justify-between rounded-xl border border-white/10 bg-black/20 backdrop-blur-sm px-3 py-2">
+            <div className="flex gap-2 sm:gap-3">
+              <Button type="button" variant="secondary" onClick={() => navigation.navigateToLandingPage()}>
+                <House />
+                Início
+              </Button>
+              <Button type="button" variant="outline" onClick={goBack} disabled={current === 0}>
+                <ArrowLeft />
+                Voltar
+              </Button>
+            </div>
+
+            <Button
+              type="button"
+              onClick={goNext}
+              disabled={!isCurrentAnswered}
+              className="relative overflow-hidden bg-[#3d2a8f] hover:bg-[#4d35b3] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm px-6 font-medium after:absolute after:inset-0 after:bg-gradient-to-r after:from-[#4d35b3] after:to-[#6b54e5] after:opacity-0 hover:after:opacity-20 after:transition-opacity"
+            >
+              {current < unified.length - 1 ? 'Próximo' : 'Finalizar'}
+              <ArrowRight />
+            </Button>
+          </div>
         </div>
       </div>
+      {/* local animations */}
+      <style jsx>{`
+        @keyframes fade-slide {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-slide {
+          animation: fade-slide 220ms ease-out;
+        }
+      `}</style>
     </section>
   );
 }

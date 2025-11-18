@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="48" viewBox="0 0 160 48" fill="none">
+  <rect width="160" height="48" rx="10" fill="url(#g)" fill-opacity="0.15"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="160" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff4687"/>
+      <stop offset="1" stop-color="#4d2cc4"/>
+    </linearGradient>
+  </defs>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" fill-opacity="0.9" font-family="Inter, Arial" font-size="16" font-weight="600">TechNova</text>
+</svg>

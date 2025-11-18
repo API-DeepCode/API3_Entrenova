@@ -3,113 +3,140 @@
 type Opcao = {
     texto: string;
     proximoId: string;
+    tipo?: 'primaria' | 'secundaria'; // permite hierarquia visual
+};
+
+type Cta = {
+    label: string;
+    action: 'agendar_demo' | 'ver_planos' | 'contato';
+    destaque?: boolean;
 };
 
 type EtapaConversa = {
     pergunta: string;
     opcoes: Opcao[];
+    categoria?: 'Introducao' | 'Teste' | 'Dimensoes' | 'Relatorio' | 'Empresas' | 'Trilhas' | 'Planos' | 'Conversao' | 'Encerramento';
+    cta?: Cta; // ação de conversão contextual
 };
 
 export const ROTEIRO_CONVERSA: Record<string, EtapaConversa> = {
     INICIO: {
-        pergunta: "👋 Olá! Seja bem-vindo(a) à nossa plataforma de desenvolvimento corporativo. Como posso te ajudar hoje?",
+        pergunta: "👋 Bem-vindo(a)! Vamos acelerar o desenvolvimento da sua equipe. Escolha um assunto para começar:",
+        categoria: 'Introducao',
         opcoes: [
-            { texto: "Quero entender como funciona o teste", proximoId: "TESTE" },
-            { texto: "O que são as dimensões avaliadas?", proximoId: "DIMENSOES" },
-            { texto: "Como recebo meu relatório final?", proximoId: "RELATORIO" },
-            { texto: "Como posso adquirir as trilhas de aprendizagem?", proximoId: "TRILHAS" },
+            { texto: "Como funciona o teste?", proximoId: "TESTE", tipo: 'primaria' },
+            { texto: "O que são as dimensões?", proximoId: "DIMENSOES" },
+            { texto: "Sobre o relatório final", proximoId: "RELATORIO" },
+            { texto: "Trilhas de aprendizagem", proximoId: "TRILHAS" },
         ],
+        cta: { label: 'Agendar demonstração', action: 'agendar_demo' }
     },
 
     TESTE: {
-        pergunta: "🧠 Nosso teste foi desenvolvido para identificar as competências e estilos comportamentais dos colaboradores. Ele leva em média 10 a 15 minutos e, ao final, gera um relatório completo com resultados personalizados.",
+        pergunta: "🧠 Nosso teste identifica competências e estilos comportamentais em 10–15 minutos. Ele gera insights acionáveis para decisões de desenvolvimento e cultura.",
+        categoria: 'Teste',
         opcoes: [
-            { texto: "Quais tipos de resultados eu recebo?", proximoId: "RELATORIO" },
-            { texto: "Posso aplicar o teste na minha empresa?", proximoId: "EMPRESAS" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Quais resultados recebo?", proximoId: "RELATORIO", tipo: 'primaria' },
+            { texto: "Aplicar na minha empresa", proximoId: "EMPRESAS" },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
     },
 
     DIMENSOES: {
-        pergunta: "📊 As dimensões representam diferentes aspectos comportamentais e profissionais avaliados no teste, como liderança, colaboração, inovação e foco em resultados. Cada dimensão ajuda a entender melhor os pontos fortes e áreas de desenvolvimento de cada pessoa.",
+        pergunta: "📊 Avaliamos dimensões como Liderança, Colaboração, Inovação e Foco em Resultados para mapear forças e lacunas.",
+        categoria: 'Dimensoes',
         opcoes: [
-            { texto: "Pode me dar um exemplo prático?", proximoId: "EXEMPLO_DIMENSAO" },
+            { texto: "Exemplo prático", proximoId: "EXEMPLO_DIMENSAO" },
             { texto: "Quero saber sobre o relatório", proximoId: "RELATORIO" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
     },
 
     EXEMPLO_DIMENSAO: {
-        pergunta: "💡 Por exemplo: a dimensão 'Liderança' avalia como o profissional se comporta em situações que exigem iniciativa, tomada de decisão e gestão de pessoas. Já 'Colaboração' mede a capacidade de trabalhar em equipe e lidar com diferentes perfis.",
+        pergunta: "💡 Ex.: 'Liderança' observa iniciativa e decisão; 'Colaboração' mede sinergia com perfis diversos.",
+        categoria: 'Dimensoes',
         opcoes: [
-            { texto: "Interessante! E o relatório mostra isso?", proximoId: "RELATORIO" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Isso aparece no relatório?", proximoId: "RELATORIO" },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
     },
 
     RELATORIO: {
-        pergunta: "📄 O relatório é gerado automaticamente após a conclusão do teste. Você recebe um documento com análises detalhadas, gráficos e recomendações personalizadas para cada dimensão avaliada. Ele pode ser enviado por e-mail ou acessado diretamente na plataforma.",
+        pergunta: "📄 Gerado automaticamente: análises comparativas, gráficos e recomendações organizadas por dimensão. Acesso direto na plataforma ou e-mail.",
+        categoria: 'Relatorio',
         opcoes: [
-            { texto: "Como posso aplicar o teste para minha equipe?", proximoId: "EMPRESAS" },
-            { texto: "Quero ver os planos disponíveis", proximoId: "TRILHAS" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Aplicar teste na equipe", proximoId: "EMPRESAS", tipo: 'primaria' },
+            { texto: "Ver trilhas", proximoId: "TRILHAS" },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
+        cta: { label: 'Ver exemplo de relatório', action: 'ver_planos' }
     },
 
     EMPRESAS: {
-        pergunta: "🏢 Sim! Nossa plataforma foi criada especialmente para uso corporativo. As empresas podem cadastrar colaboradores, acompanhar os resultados em tempo real e receber relatórios consolidados com métricas de desempenho e engajamento.",
+        pergunta: "🏢 Cadastre colaboradores, acompanhe resultados em tempo real e consolide métricas de engajamento e evolução.",
+        categoria: 'Empresas',
         opcoes: [
-            { texto: "Como contratar o serviço?", proximoId: "TRILHAS" },
-            { texto: "Gostaria de uma demonstração", proximoId: "DEMO" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Ver trilhas de desenvolvimento", proximoId: "TRILHAS" },
+            { texto: "Quero uma demonstração", proximoId: "DEMO", tipo: 'primaria' },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
+        cta: { label: 'Solicitar proposta', action: 'contato', destaque: true }
     },
 
     TRILHAS: {
-        pergunta: "🎯 As trilhas de aprendizagem são conjuntos de cursos e atividades personalizadas com base nos resultados dos testes. Elas ajudam a desenvolver as competências mais relevantes para cada colaborador ou equipe.",
+        pergunta: "🎯 Trilhas = sequências personalizadas de conteúdo alinhadas às lacunas detectadas no teste.",
+        categoria: 'Trilhas',
         opcoes: [
-            { texto: "Quero saber os planos disponíveis", proximoId: "PLANOS" },
-            { texto: "Posso personalizar uma trilha?", proximoId: "PERSONALIZAR" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Ver planos", proximoId: "PLANOS" },
+            { texto: "Personalizar trilha", proximoId: "PERSONALIZAR", tipo: 'primaria' },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
     },
 
     PLANOS: {
-        pergunta: "💼 Oferecemos três planos principais: *Essencial*, *Profissional* e *Corporativo*. Cada um inclui diferentes recursos, desde relatórios individuais até dashboards analíticos e suporte especializado.",
+        pergunta: "💼 Planos: Essencial (equipes pequenas), Profissional (comparativos e dashboards), Corporativo (personalização e integrações).",
+        categoria: 'Planos',
         opcoes: [
-            { texto: "Quero contratar um plano", proximoId: "DEMO" },
-            { texto: "Ver diferenças entre planos", proximoId: "DIFERENCA_PLANOS" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Diferenças entre planos", proximoId: "DIFERENCA_PLANOS" },
+            { texto: "Contratar / Demonstração", proximoId: "DEMO", tipo: 'primaria' },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
+        cta: { label: 'Comparar planos', action: 'ver_planos' }
     },
 
     DIFERENCA_PLANOS: {
-        pergunta: "🔍 O plano *Essencial* é ideal para pequenas equipes. O *Profissional* traz acompanhamento em tempo real e relatórios comparativos. Já o *Corporativo* oferece personalização total e integração com sistemas internos da empresa.",
+        pergunta: "🔍 Essencial: base sólida. Profissional: métricas em tempo real. Corporativo: customização e integrações avançadas.",
+        categoria: 'Planos',
         opcoes: [
-            { texto: "Solicitar proposta personalizada", proximoId: "DEMO" },
+            { texto: "Solicitar proposta", proximoId: "DEMO", tipo: 'primaria' },
             { texto: "Voltar aos planos", proximoId: "PLANOS" },
         ],
     },
 
     PERSONALIZAR: {
-        pergunta: "⚙️ Claro! As trilhas podem ser personalizadas conforme as necessidades da sua empresa. Você pode escolher as competências desejadas, definir a sequência de aprendizado e até integrar conteúdos próprios.",
+        pergunta: "⚙️ Personalize competências, ordem de aprendizagem e integre conteúdos internos.",
+        categoria: 'Trilhas',
         opcoes: [
-            { texto: "Solicitar demonstração", proximoId: "DEMO" },
-            { texto: "Ver planos disponíveis", proximoId: "PLANOS" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Solicitar demonstração", proximoId: "DEMO", tipo: 'primaria' },
+            { texto: "Ver planos", proximoId: "PLANOS" },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
     },
 
     DEMO: {
-        pergunta: "📅 Perfeito! Você pode agendar uma demonstração com um de nossos especialistas para conhecer todos os recursos da plataforma e receber uma proposta personalizada.",
+        pergunta: "📅 Agende uma demonstração e veja casos práticos de evolução de equipes.",
+        categoria: 'Conversao',
         opcoes: [
-            { texto: "Agendar demonstração", proximoId: "ENCERRAMENTO_SUCESSO" },
-            { texto: "Voltar ao início", proximoId: "INICIO" },
+            { texto: "Agendar agora", proximoId: "ENCERRAMENTO_SUCESSO", tipo: 'primaria' },
+            { texto: "Voltar", proximoId: "INICIO" },
         ],
+        cta: { label: 'Agendar demonstração', action: 'agendar_demo', destaque: true }
     },
 
     ENCERRAMENTO_SUCESSO: {
-        pergunta: "✨ Fico feliz em ter ajudado! Se precisar de mais informações, estarei por aqui. Tenha um excelente dia!",
+        pergunta: "✨ Obrigado! Pronto para dar o próximo passo? Estou à disposição para continuar quando quiser.",
+        categoria: 'Encerramento',
         opcoes: [],
+        cta: { label: 'Retornar ao início', action: 'ver_planos' }
     },
 };
