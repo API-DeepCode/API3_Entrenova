@@ -29,7 +29,7 @@ export function InputField({
         onChange={onChange}
         placeholder={placeholder}
         required
-        className={styles.inputBase}
+        className={`${styles.inputBase} ${value ? styles.filled : ''}`}
       />
     </div>
   );

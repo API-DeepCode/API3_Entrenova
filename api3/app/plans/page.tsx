@@ -6,12 +6,12 @@ import { PricingComparison } from '@/components/plans/PricingComparison';
 
 export default function PaginaDePlanos() {
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen pt-24 pb-24 px-4 sm:px-8 md:px-16 lg:px-40 text-foreground bg-linear-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]">
       <Hero />
       <Benefits />
       <HowItWorks />
       <PricingSection />
       <PricingComparison />
-    </div>
+    </main>
   );
 }

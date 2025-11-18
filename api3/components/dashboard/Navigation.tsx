@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   BarChart3, Headphones, TrendingUp, Target, Award, Users, 
-  UserCog, GraduationCap, Settings, User 
+  UserCog, GraduationCap, Settings, User, House, HelpCircle 
 } from "lucide-react";
 
 export function Navigation() {
@@ -94,6 +94,28 @@ export function Navigation() {
             </div>
           </div>
         ))}
+        {/* Área inferior: ajuda + voltar home */}
+        <div className="pt-4 mt-6 space-y-2 border-t border-white/10">
+          <button
+            onClick={() => {
+              try {
+                // dispara evento para abrir painel sem reload
+                window.dispatchEvent(new Event("open-dashboard-onboarding"));
+              } catch {/* ignore */}
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-white/70 hover:bg-white/5 hover:text-white"
+          >
+            <HelpCircle size={20} />
+            <span>Ajuda / Como usar</span>
+          </button>
+          <Link
+            href="/"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-white/70 hover:bg-white/5 hover:text-white"
+          >
+            <House size={20} />
+            <span>Voltar ao Home</span>
+          </Link>
+        </div>
       </div>
     </nav>
   );

@@ -36,7 +36,7 @@ export function SelectField({
 
   return (
     <div className={styles.select_wrapper} ref={dropdownRef}>
-      <div className={styles.select_display} onClick={() => setOpen(!open)}>
+      <div className={`${styles.select_display} ${value ? 'filled' : ''}`} onClick={() => setOpen(!open)}>
         <div className={styles.select_icon}>{icon}</div>
 
         <span className={value ? "" : styles.placeholder}>

@@ -57,18 +57,21 @@ export default function RegisterPage() {
   };
 
   return (
-    <>
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12">
+      <div aria-hidden className="fixed inset-0 -z-10 bg-gradient-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]" />
       <Header user={null} onLogout={() => {}} />
 
-      <div className="min-h-screen flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md">
-          <div className="backdrop-blur-md bg-white/10 rounded-3xl p-8 border border-white/20 shadow-[0_8px_32px_rgba(75,0,255,0.37)]">
+      <div className="w-full max-w-lg mt-16">
+        <div className="rounded-3xl p-8 md:p-10 border border-white/15 bg-black/30 backdrop-blur-xl shadow-[0_0_1px_1px_rgba(255,255,255,0.08),0_12px_40px_-8px_rgba(0,0,0,0.55)]">
 
-            <h1 className="text-3xl text-center mb-2 bg-linear-to-r from-[#FF7FE5] to-[#FFA3E8] bg-clip-text text-transparent">
+          <div className="space-y-3 text-center mb-6">
+            <h1 className="text-3xl font-semibold tracking-tight bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5] bg-clip-text text-transparent">
               Crie sua conta
             </h1>
+            <p className="text-sm text-white/70">Preencha os dados para começar</p>
+          </div>
 
-            <form onSubmit={handleRegister} className="space-y-5">
+          <form onSubmit={handleRegister} className="space-y-5">
 
               <InputField icon={<Building />} name="nome_empresa" value={formData.nome_empresa} placeholder="Nome da empresa" onChange={handleChange} />
 
@@ -98,18 +101,26 @@ export default function RegisterPage() {
 
               <PasswordField label="Confirmar senha" name="confirmarSenha" value={confirmarSenha} onChange={e => setConfirmarSenha(e.target.value)} showPassword={showConfirm} setShowPassword={setShowConfirm} />
 
-              <button type="submit" className="w-full py-3 bg-linear-to-r from-[#FF7FE5] to-[#FFA3E8] rounded-xl text-white font-medium hover:scale-[1.02] transition-all">
-                Registrar
-              </button>
+              <div className="space-y-3 pt-2">
+                <button
+                  type="submit"
+                  className="group w-full relative overflow-hidden rounded-xl py-3 font-medium tracking-wide text-white bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b54e5]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent transition shadow-sm hover:shadow-[#6b54e5]/30 hover:scale-[1.01] active:scale-[0.99]"
+                >
+                  <span className="relative z-10">Registrar</span>
+                  <span aria-hidden className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-r from-white/0 via-white/40 to-white/0 transition" />
+                </button>
+                <button
+                  type="button"
+                  onClick={navigate.navigateToLogin}
+                  className="w-full py-3 rounded-xl font-medium text-sm text-[#6b54e5] border border-white/15 bg-white/5 hover:bg-white/10 hover:text-white transition-colors"
+                >
+                  Já tenho conta
+                </button>
+              </div>
 
-              <button type="button" onClick={navigate.navigateToLogin} className="w-full py-3 bg-white/5 border border-white/30 rounded-xl text-[#FFA3E8]">
-                Já tenho conta
-              </button>
-
-            </form>
-          </div>
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }

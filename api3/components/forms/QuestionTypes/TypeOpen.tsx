@@ -1,5 +1,5 @@
 import { FormsQuestions } from "@/lib/type";
-import styles from "@/components/styles/Forms.module.css";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
     questionData: FormsQuestions;
@@ -12,14 +12,14 @@ export default function TypeOpen({ questionData, answers, handleSelect }: Props)
     const value = (answers[question] as string) || "";
 
     return (
-        <div className={styles.question}>
-            <h2 className={styles.question_title}>{question}</h2>
-            <input className={styles.open_input}
-            type="text"
-            placeholder="Digite sua resposta..."
-            value={value}
-            onChange={(e) => handleSelect(question, e.target.value)}
-            aria-label={`Resposta para: ${question}`}
+        <div className="space-y-3">
+            <h2 className="text-lg font-medium leading-tight">{question}</h2>
+            <Textarea
+                placeholder="Digite sua resposta..."
+                value={value}
+                onChange={(e) => handleSelect(question, e.target.value)}
+                aria-label={`Resposta para: ${question}`}
+                className="min-h-24"
             />
         </div>
     );

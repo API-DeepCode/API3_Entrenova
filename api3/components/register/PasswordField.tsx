@@ -30,14 +30,14 @@ export function PasswordField({
         onChange={onChange}
         placeholder={label}
         required
-        className={styles.inputBase}
+        className={`${styles.inputBase} ${value ? styles.filled : ''}`}
         autoComplete="new-password"
       />
 
       <button
         type="button"
         onClick={() => setShowPassword(!showPassword)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#FF7FE5]/70 hover:text-[#FF7FE5]"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b54e5]/60 hover:text-[#6b54e5]"
       >
         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
       </button>

@@ -42,9 +42,10 @@ const benefits = [
 
 export function Benefits() {
   return (
-    <section className="relative w-full max-w-7xl mx-auto px-6 py-24">
-      {/* Fundo decorativo */}
-      <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent rounded-3xl blur-3xl opacity-70 -z-10" />
+    <section className="relative w-full max-w-7xl mx-auto px-6 py-24 overflow-hidden">
+      {/* Blobs decorativos harmônicos com a landing */}
+      <div aria-hidden className="pointer-events-none absolute -z-10 top-[-100px] left-[-80px] w-[480px] h-[480px] rounded-full bg-linear-to-tr from-primary/20 via-[#ff4687]/15 to-transparent blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -z-10 bottom-[-120px] right-[-60px] w-[420px] h-[420px] rounded-full bg-linear-to-tr from-[#4d2cc4]/25 via-primary/15 to-transparent blur-3xl" />
 
       <div className="text-center mb-20">
         <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-400 mb-6">
@@ -59,7 +60,7 @@ export function Benefits() {
         {benefits.map((benefit, index) => (
           <Card
             key={index}
-            className="group relative border border-border bg-gradient-to-b from-card/60 to-card/40 backdrop-blur-md rounded-2xl shadow-md transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_25px_-5px_var(--tw-shadow-color)] hover:shadow-primary/50 hover:border-primary/50"
+            className="group relative border border-border bg-gradient-to-b from-card/60 to-card/40 backdrop-blur-md rounded-2xl shadow-md transition-all duration-500 hover:-translate-y-2 hover:rotate-[0.25deg] hover:shadow-[0_0_25px_-5px_var(--tw-shadow-color)] hover:shadow-primary/50 hover:border-primary/50"
           >
             <CardContent className="p-8 flex flex-col items-start">
               <div className="relative mb-6">

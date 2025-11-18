@@ -3,7 +3,6 @@ import TypeDefault from "@/components/forms/QuestionTypes/TypeDefault";
 import TypeMultiple from "@/components/forms/QuestionTypes/TypeMultiple";
 import TypeSlider from "@/components/forms/QuestionTypes/TypeSlider";
 import TypeOpen from "@/components/forms/QuestionTypes/TypeOpen";
-import styles from "@/components/styles/Forms.module.css";
 
 interface Props {
     questions: FormsQuestions[];
@@ -21,7 +20,7 @@ export default function QuestionDisplay({ questions, answers, handleSelect }: Pr
     }
 
     return (
-        <div className={styles.questions_container}>
+        <div className="flex flex-col gap-6">
             {questions.map((q) => {
                 const commonProps = {
                     questionData: q,
