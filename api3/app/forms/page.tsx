@@ -265,7 +265,6 @@ export default function Forms(){
     setCurrent(c => c-1);
   };
 
-  // Determine subtitle "Etapa X de 4" based on part of the current question
   const getSubtitle = () => {
     if (!currentQuestion) return "";
     const part = currentQuestion.part;
@@ -280,25 +279,36 @@ export default function Forms(){
                            );
 
   return (
-    <section className="relative max-w-5xl mx-auto px-4 py-8 sm:py-10">
-      {/* Full-page background gradient matching landing */}
-      <div aria-hidden className="fixed inset-0 -z-10 bg-linear-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d]" />
+  <main className="relative min-h-screen bg-gradient-to-br from-[#0b031f] via-[#2b1364] to-[#050013] text-foreground overflow-hidden">
+    {/* Glows de fundo iguais aos da página de planos */}
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      <div className="absolute -top-40 -left-20 w-80 h-80 rounded-full bg-gradient-to-br from-[#ec4899]/25 via-[#a855f7]/20 to-transparent blur-3xl" />
+      <div className="absolute -bottom-40 -right-10 w-96 h-96 rounded-full bg-gradient-to-tr from-[#4f46e5]/30 via-[#22d3ee]/10 to-transparent blur-3xl" />
+    </div>
+
+    <section className="relative mx-auto max-w-5xl px-4 pt-24 pb-20 sm:pb-24">
       <div className="space-y-4 sm:space-y-6">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 md:gap-4">
-          <div className="px-2 sm:px-4">
-            <h1 className="text-xl font-semibold leading-tight">{getTitle()}</h1>
-            <h2 className="text-sm text-muted-foreground">{getSubtitle()}</h2>
+        {/* Título + progresso */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 md:gap-6">
+          <div className="px-1 sm:px-2">
+            <h1 className="text-xl sm:text-2xl font-semibold leading-tight text-white">
+              {getTitle()}
+            </h1>
+            <h2 className="text-sm text-white/70 mt-1">
+              {getSubtitle()}
+            </h2>
           </div>
 
           <div className="w-full md:flex-1 md:max-w-md">
             <ProgressBar current={answeredCount} total={totalQuestions} />
-            <div className="mt-1.5 text-xs sm:text-sm flex items-center justify-between">
-              <span className="text-foreground/90">
+
+            <div className="mt-1.5 text-xs sm:text-sm flex items-center justify-between text-white/85">
+              <span>
                 Respondidas {answeredCount} de {totalQuestions} ({percent}%)
               </span>
               <span className="inline-flex items-center gap-2">
-                <span className="text-foreground/90">Faltam</span>
-                <span className="px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold text-white bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5] shadow-xs">
+                <span>Faltam</span>
+                <span className="px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold text-white bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5] shadow-sm">
                   {remainingCount}
                 </span>
               </span>
@@ -309,6 +319,7 @@ export default function Forms(){
               {steps.map((s, idx) => {
                 const isCompleted = s.id < currentPart;
                 const isActive = s.id === currentPart;
+
                 return (
                   <div className="flex items-center gap-3" key={s.id}>
                     <div
@@ -317,21 +328,35 @@ export default function Forms(){
                         isCompleted
                           ? "text-white bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5]"
                           : isActive
-                            ? "text-white bg-primary ring-2 ring-primary/30"
-                            : "text-white/70 bg-white/10 border border-white/10",
+                          ? "text-white bg-primary ring-2 ring-primary/40"
+                          : "text-white/70 bg-white/10 border border-white/10",
                       ].join(" ")}
                       aria-current={isActive ? "step" : undefined}
                     >
                       {s.id}
                     </div>
+
                     <div className="text-xs">
-                      <div className={isActive ? "text-white" : isCompleted ? "text-white/80" : "text-white/60"}>{s.label}</div>
+                      <div
+                        className={
+                          isActive
+                            ? "text-white"
+                            : isCompleted
+                            ? "text-white/80"
+                            : "text-white/60"
+                        }
+                      >
+                        {s.label}
+                      </div>
                     </div>
+
                     {idx < steps.length - 1 && (
                       <div
                         className={[
                           "h-0.5 w-8 sm:w-10 rounded-full",
-                          s.id < currentPart ? "bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5]" : "bg-white/15",
+                          s.id < currentPart
+                            ? "bg-gradient-to-r from-[#3d2a8f] to-[#6b54e5]"
+                            : "bg-white/15",
                         ].join(" ")}
                       />
                     )}
@@ -342,7 +367,8 @@ export default function Forms(){
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-linear-to-br from-[#1a0b3d] via-[#311597] to-[#1a0b3d] p-4 sm:p-6 shadow-md">
+        {/* Card principal do formulário */}
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#0b031f] via-[#2b1364] to-[#050013] p-4 sm:p-6 shadow-[0_18px_55px_rgba(0,0,0,0.8)]">
           {currentQuestion && (
             <div key={current} className="animate-fade-slide">
               <QuestionDisplay
@@ -353,14 +379,27 @@ export default function Forms(){
             </div>
           )}
 
-          <div className="mt-6 flex items-center justify-between rounded-xl border border-white/10 bg-black/20 backdrop-blur-sm px-3 py-2">
+          {/* Barra de navegação inferior */}
+          <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/30 backdrop-blur-sm px-3 py-3">
             <div className="flex gap-2 sm:gap-3">
-              <Button type="button" variant="secondary" onClick={() => navigation.navigateToLandingPage()}>
-                <House />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => navigation.navigateToLandingPage()}
+                className="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 text-white border border-white/15"
+              >
+                <House className="w-4 h-4" />
                 Início
               </Button>
-              <Button type="button" variant="outline" onClick={goBack} disabled={current === 0}>
-                <ArrowLeft />
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={goBack}
+                disabled={current === 0}
+                className="flex items-center gap-1.5 border-white/25 text-white/90 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ArrowLeft className="w-4 h-4" />
                 Voltar
               </Button>
             </div>
@@ -369,24 +408,35 @@ export default function Forms(){
               type="button"
               onClick={goNext}
               disabled={!isCurrentAnswered}
-              className="relative overflow-hidden bg-[#3d2a8f] hover:bg-[#4d35b3] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm px-6 font-medium after:absolute after:inset-0 after:bg-gradient-to-r after:from-[#4d35b3] after:to-[#6b54e5] after:opacity-0 hover:after:opacity-20 after:transition-opacity"
+              className="relative overflow-hidden flex items-center gap-2 justify-center px-6 font-medium bg-[#3d2a8f] hover:bg-[#4d35b3] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md shadow-black/50
+              after:absolute after:inset-0 after:bg-gradient-to-r after:from-[#4d35b3] after:to-[#6b54e5] after:opacity-0 hover:after:opacity-20 after:transition-opacity"
             >
-              {current < unified.length - 1 ? 'Próximo' : 'Finalizar'}
-              <ArrowRight />
+              <span>
+                {current < unified.length - 1 ? "Próximo" : "Finalizar"}
+              </span>
+              <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </div>
+
       {/* local animations */}
       <style jsx>{`
         @keyframes fade-slide {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .animate-fade-slide {
           animation: fade-slide 220ms ease-out;
         }
       `}</style>
     </section>
-  );
+  </main>
+);
 }

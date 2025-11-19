@@ -55,11 +55,25 @@ export function Navigation() {
   return (
     <nav className="fixed left-0 top-0 h-screen w-64 bg-black/30 backdrop-blur-xl border-r border-white/10 p-6 overflow-y-auto">
 
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-2xl bg-linear-to-r from-[#ff4687] to-[#4d2cc4] bg-clip-text text-transparent">
           EntreNova Flix
         </h1>
         <p className="text-sm text-white/60 mt-1">Plataforma B2B E-Learning</p>
+      </div>
+      {/* Link para tela inicial unificada */}
+      <div className="mb-6">
+        <Link
+          href="/dashboard"
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+            pathname === '/dashboard'
+              ? 'bg-linear-to-r from-[#ff4687] to-[#4d2cc4] text-white shadow-lg shadow-[#ff4687]/20'
+              : 'text-white/70 hover:bg-white/5 hover:text-white'
+          }`}
+        >
+          <House size={20} />
+          <span>Início</span>
+        </Link>
       </div>
 
       <div className="space-y-6">

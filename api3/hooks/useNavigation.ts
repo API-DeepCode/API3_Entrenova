@@ -46,7 +46,8 @@ export function useNavigation(){
      }
 
      function navigateToDashboard(){
-          router.push("/dashboard/comercial")
+          // Ir para a página inicial do dashboard (overview/home)
+          router.push("/dashboard")
      }
 
      return {
