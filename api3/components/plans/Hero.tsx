@@ -3,7 +3,14 @@
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, Sparkles, Building2, Users, Star } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Building2,
+  Users,
+  Star,
+} from "lucide-react";
 
 export function Hero() {
   const router = useRouter();
@@ -14,16 +21,20 @@ export function Hero() {
   };
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-primary/5 via-background to-background py-24 px-6 overflow-hidden">
+    <section className="relative w-full py-20 px-6 overflow-hidden">
+      {/* Glow suave, sem trocar o fundo global */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-tr from-primary/15 via-transparent to-transparent blur-3xl opacity-70"
+      />
 
-      <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent blur-3xl opacity-60 -z-10" />
-
-      <div className="absolute top-6 left-6">
+      {/* Botão Voltar */}
+      <div className="absolute top-2 left-2 sm:top-4 sm:left-0">
         <Button
           variant="outline"
           size="lg"
           onClick={() => router.push("/")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-primary/30 text-primary font-medium 
+          className="group flex items-center gap-2 px-4 py-2.5 rounded-xl border border-primary/30 text-primary font-medium 
           bg-primary/5 backdrop-blur-sm shadow-md transition-all duration-300 
           hover:bg-primary/20 hover:text-primary-foreground hover:shadow-primary/30"
         >
@@ -35,18 +46,18 @@ export function Hero() {
       <div className="max-w-5xl mx-auto text-center animate-fadeIn">
         {/* Badge */}
         <Badge
-          className="mb-6 gap-2 px-4 py-2 text-sm font-medium bg-primary/10 text-primary border border-primary/20"
+          className="mb-6 inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium bg-primary/10 text-primary border border-primary/20 rounded-full"
           variant="secondary"
         >
           <Sparkles className="w-4 h-4 text-primary" />
           Plataforma de Desenvolvimento Corporativo
         </Badge>
-        
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-violet-200 to-fuchsia-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] leading-tight">
+
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-400 via-primary to-purple-400 bg-clip-text text-transparent drop-shadow-[0_2px_16px_rgba(0,0,0,0.85)] leading-tight">
           Trilhas de Treinamento Personalizadas para Sua Equipe
         </h1>
 
-        <p className="text-muted-foreground max-w-3xl mx-auto mb-10 text-lg">
+        <p className="text-muted-foreground max-w-3xl mx-auto mb-10 text-base sm:text-lg leading-relaxed text-white/80">
           Desenvolva as competências essenciais da sua equipe com trilhas de aprendizagem sob medida.
           Conteúdos relevantes, acompanhamento em tempo real e certificações que fazem a diferença.
         </p>
@@ -55,7 +66,7 @@ export function Hero() {
           <Button
             size="lg"
             onClick={scrollToPlans}
-            className="group text-base font-medium shadow-lg transition-all duration-300 hover:shadow-primary/30"
+            className="group text-base font-medium shadow-lg shadow-primary/40 transition-all duration-300 hover:shadow-primary/60 hover:-translate-y-[1px] hover:scale-[1.02] active:scale-[0.98]"
           >
             Ver Planos
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -63,28 +74,34 @@ export function Hero() {
           <Button
             size="lg"
             variant="outline"
-            className="text-base font-medium transition-all duration-300 hover:bg-primary/10 hover:text-primary"
+            className="text-base font-medium border-primary/40 text-primary hover:bg-primary/10 hover:text-primary hover:border-primary transition-all duration-300"
           >
             Agendar Demonstração
           </Button>
         </div>
 
         {/* Métricas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto pt-10 border-t border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto pt-10 border-t border-white/20">
           <div className="flex flex-col items-center">
             <Building2 className="w-6 h-6 text-primary mb-2" />
-            <div className="text-2xl font-semibold text-foreground">+500</div>
-            <p className="text-muted-foreground text-sm">Empresas atendidas</p>
+            <div className="text-2xl font-semibold text-white">+500</div>
+            <p className="text-muted-foreground text-sm text-white/75">
+              Empresas atendidas
+            </p>
           </div>
           <div className="flex flex-col items-center">
             <Users className="w-6 h-6 text-primary mb-2" />
-            <div className="text-2xl font-semibold text-foreground">+50.000</div>
-            <p className="text-muted-foreground text-sm">Colaboradores capacitados</p>
+            <div className="text-2xl font-semibold text-white">+50.000</div>
+            <p className="text-muted-foreground text-sm text-white/75">
+              Colaboradores capacitados
+            </p>
           </div>
           <div className="flex flex-col items-center">
             <Star className="w-6 h-6 text-primary mb-2" />
-            <div className="text-2xl font-semibold text-foreground">4.9/5</div>
-            <p className="text-muted-foreground text-sm">Avaliação média</p>
+            <div className="text-2xl font-semibold text-white">4.9/5</div>
+            <p className="text-muted-foreground text-sm text-white/75">
+              Avaliação média
+            </p>
           </div>
         </div>
       </div>
