@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     console.error("Erro na API: ", err);
  
     return NextResponse.json(
-      { error: "Erro interno: deu ruim", err },
+      { error: "Erro interno: ", err },
       { status: 500 }
     );
   }

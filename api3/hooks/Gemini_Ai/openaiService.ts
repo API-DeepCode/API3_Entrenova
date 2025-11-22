@@ -25,6 +25,114 @@ export async function gerarRelatorioOpenAI(perguntasERespostas: PerguntaResposta
         )
         .join("\n");
 
+    // Mapeamento das perguntas da Parte 3 (Mini-Diagnóstico) — usado para calcular score
+    const part3QuestionMap: Record<string, { dimension: string; options?: string[]; type?: 'default' | 'slider' | 'open' }> = {
+        // Pessoas e Cultura
+        "Como a comunicação acontece no dia a dia?": { dimension: 'Pessoas e Cultura', options: ["Todos têm clareza e acesso fácil às informações", "Funciona na maior parte do tempo, mas com algumas falhas", "Normalmente só em reuniões formais ou quando há problemas", "É confusa, cada líder comunica de um jeito"], type: 'default' },
+        "Como você descreveria o estilo de liderança predominante?": { dimension: 'Pessoas e Cultura', options: ["Engajam e dão autonomia", "São bons, mas variam conforme o líder", "Centralizam muito as decisões", "Raramente exercem liderança ativa"], type: 'default' },
+        "Quando surgem problemas, como os times costumam agir?": { dimension: 'Pessoas e Cultura', options: ["Trazem ideias e resolvem juntos", "Resolvem, mas de forma reativa", "Dependem sempre do gestor para decidir", "Evitam mudanças e preferem manter como está"], type: 'default' },
+        "Como está organizada a rotina de trabalho?": { dimension: 'Pessoas e Cultura', options: ["Papéis e prioridades são claros", "Há certa clareza, mas faltam recursos ou prazos realistas", "Muitas vezes é confusa, com foco em “apagar incêndios”", "Não há organização definida, cada um faz do seu jeito"], type: 'default' },
+        "Até que ponto os valores da empresa estão presentes no dia a dia?": { dimension: 'Pessoas e Cultura', options: ["Claros e vividos na prática", "Conhecidos, mas pouco aplicados", "Quase não são lembrados, só em discursos", "Não há clareza sobre os valores"], type: 'default' },
+        "De 0 a 5, quão claras estão as funções e responsabilidades de cada pessoa da equipe?": { dimension: 'Pessoas e Cultura', type: 'slider' },
+        "De 0 a 5, como você avalia a comunicação entre líderes e equipes?": { dimension: 'Pessoas e Cultura', type: 'slider' },
+        "De 0 a 5, como você avalia a colaboração entre diferentes equipes ou áreas? (explique em 1 frase, se quiser)": { dimension: 'Pessoas e Cultura', type: 'slider' },
+
+        // Estrutura e Operações
+        "Como é a troca de informações entre áreas?": { dimension: 'Estrutura e Operações', options: ["Integrada e frequente", "Funciona em parte, com alguns ruídos", "Depende de reuniões formais", "As áreas trabalham isoladas"], type: 'default' },
+        "Como os gestores lidam com delegação?": { dimension: 'Estrutura e Operações', options: ["Delegam com clareza e confiança", "Delegam, mas acompanham em excesso", "Raramente delegam", "Não delegam, concentram tudo"], type: 'default' },
+        "Quando processos falham, o que acontece?": { dimension: 'Estrutura e Operações', options: ["As equipes propõem melhorias rapidamente", "Há ajustes, mas com demora", "Só a gestão revisa processos", "Nada muda, seguimos com os problemas"], type: 'default' },
+        "Quanta autonomia operacional os colaboradores têm?": { dimension: 'Estrutura e Operações', options: ["Alta, com responsabilidade", "Alguma, mas dependem de aprovações", "Pouca, com muito controle", "Nenhuma, tudo vem da gestão"], type: 'default' },
+        "De 0 a 5, os treinamentos oferecidos pela empresa atendem às reais necessidades do trabalho?": { dimension: 'Estrutura e Operações', type: 'slider' },
+        "De 0 a 5, como você avalia a qualidade e a agilidade das decisões internas?": { dimension: 'Estrutura e Operações', type: 'slider' },
+        "De 0 a 5, os processos atuais contribuem para eficiência e produtividade? (explique em 1 frase)": { dimension: 'Estrutura e Operações', type: 'slider' },
+
+        // Mercado e Clientes
+        "Como a empresa ouve seus clientes?": { dimension: 'Mercado e Clientes', options: ["Temos pesquisa estruturada e contínua", "Fazemos de forma ocasional", "Reagimos só em reclamações", "Não há escuta formal"], type: 'default' },
+        "Como vendas e atendimento trabalham juntos?": { dimension: 'Mercado e Clientes', options: ["Colaboram e compartilham informações", "Trocam parcialmente, com falhas", "Atuam isolados, sem integração", "Há conflitos ou competição entre áreas"], type: 'default' },
+        "De 0 a 5, como você avalia a capacidade da empresa de se adaptar a mudanças externas?": { dimension: 'Mercado e Clientes', type: 'slider' },
+        "De 0 a 5, a empresa costuma ouvir e aplicar feedback de clientes?": { dimension: 'Mercado e Clientes', type: 'slider' },
+        "De 0 a 5, como você avalia a capacidade da empresa de inovar em produtos ou serviços?": { dimension: 'Mercado e Clientes', type: 'slider' },
+
+        // Direção e Futuro
+        "Como a visão de futuro é comunicada?": { dimension: 'Direção e Futuro', options: ["Todos conhecem e entendem", "É conhecida, mas só pela gestão", "Quase não é falada", "Não é comunicada"], type: 'default' },
+        "Como os líderes conectam pessoas à estratégia?": { dimension: 'Direção e Futuro', options: ["Inspiram e alinham metas claramente", "Tentam alinhar, mas varia muito", "Há pouca conexão", "Não há esforço de alinhamento"], type: 'default' },
+        "De 0 a 5, os colaboradores conhecem e entendem a visão de futuro da empresa?": { dimension: 'Direção e Futuro', type: 'slider' },
+        "De 0 a 5, como você avalia a preparação e desenvolvimento de novos líderes?": { dimension: 'Direção e Futuro', type: 'slider' },
+        "De 0 a 5, a empresa tem metas estratégicas claras e compartilhadas com todos?": { dimension: 'Direção e Futuro', type: 'slider' }
+    };
+
+    // Detecta respostas da Parte 3 com peso < 3 (exclui respostas open text)
+    const weaknesses: { dimension: string; pergunta: string; resposta: string | number | null; score: number; motivo: string }[] = [];
+
+    const normalize = (s: any) => {
+        if (s === null || s === undefined) return "";
+        const str = String(s);
+        // substitui aspas curvas, normaliza acentos e remove pontuação excessiva
+        return str
+            .replace(/[“”„‟]/g, '"')
+            .normalize('NFD')
+            .replace(/\p{Diacritic}/gu, '')
+            .replace(/[\u2018\u2019']/g, "'")
+            .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+    };
+
+    const compact = (s: string) => s.replace(/[^a-z0-9]/g, '');
+
+    const findOptionIndexTolerant = (options: string[], answer: string) => {
+        const nAns = normalize(answer);
+        if (!nAns) return -1;
+        for (let i = 0; i < options.length; i++) {
+            const opt = options[i] ?? '';
+            const nOpt = normalize(opt);
+            if (nAns === nOpt) return i;
+            if (nOpt.includes(nAns) && nAns.length > 2) return i;
+            if (nAns.includes(nOpt) && nOpt.length > 2) return i;
+            if (compact(nOpt) === compact(nAns) && compact(nOpt).length > 0) return i;
+            // Checar sobreposição mínima de palavras (reduz false positives)
+            const optWords = nOpt.split(' ').filter(Boolean);
+            const ansWords = nAns.split(' ').filter(Boolean);
+            const common = optWords.filter(w => ansWords.includes(w));
+            if (common.length >= Math.max(1, Math.floor(optWords.length / 2))) return i;
+        }
+        return -1;
+    };
+
+    perguntasERespostas.forEach(item => {
+        const meta = part3QuestionMap[item.pergunta];
+        if (!meta) return; // processa somente perguntas da Parte 3
+
+        if (meta.type === 'slider') {
+            const val = typeof item.resposta === 'number' ? item.resposta : (typeof item.resposta === 'string' && item.resposta !== '' ? Number(item.resposta) : NaN);
+            if (!Number.isNaN(val)) {
+                const score = Number(val);
+                if (score < 3) weaknesses.push({ dimension: meta.dimension, pergunta: item.pergunta, resposta: item.resposta, score, motivo: `Valor numérico menor que 3 (${score})` });
+            }
+        } else if (meta.type === 'default' && Array.isArray(meta.options)) {
+            // trata resposta que pode vir como string ou array (multiple)
+            let answerStr = '';
+            if (Array.isArray(item.resposta)) answerStr = item.resposta.join(', ');
+            else if (item.resposta !== null && item.resposta !== undefined) answerStr = String(item.resposta);
+
+            const idx = findOptionIndexTolerant(meta.options, answerStr);
+            if (idx !== -1) {
+                const score = 4 - idx; // regra: 1ª opção = 4, 2ª = 3, etc.
+                if (score < 3) weaknesses.push({ dimension: meta.dimension, pergunta: item.pergunta, resposta: item.resposta, score, motivo: `Opção selecionada resulta em score ${score} (<3)` });
+            }
+        }
+    });
+
+    if (weaknesses.length > 0) {
+        console.log('Weaknesses detectadas (pré-prompt):');
+        weaknesses.forEach((w, i) => console.log(`W${i + 1}: [${w.dimension}] ${w.pergunta} => resposta: ${w.resposta} (score=${w.score}) motivo: ${w.motivo}`));
+    }
+
+    const weaknessesText = weaknesses.length > 0
+        ? ['--- DETECTED_WEAKNESSES ---', ...weaknesses.map((w, i) => `W${i+1} - Dimensão: ${w.dimension}\nPergunta: ${w.pergunta}\nResposta: ${w.resposta}\nScore: ${w.score}\nMotivo: ${w.motivo}`), '--- END DETECTED_WEAKNESSES ---'].join('\n\n')
+        : '';
+
     const systemPrompt = `
 Você é uma IA especializada em diagnóstico empresarial e análise organizacional.
 Seu papel é gerar um *relatório analítico e detalhado* sobre a situação atual de uma empresa,
@@ -70,8 +178,7 @@ Analise atentamente cada resposta e elabore um relatório coerente, objetivo e t
 
 6. *Detecção*
     Nas respostas das perguntas da parte "Dimensões, detecte desvios padrões que surgem nas respostas e destaque-os no relatório.
-    
-   
+    No relatório, na seção de Pontos de Melhorias.
 
 7. *Importante:*
    Não gere recomendações de plano de ação, trilhas de desenvolvimento ou KPIs neste momento.
@@ -88,12 +195,16 @@ ${textoBase}
 Por favor, gere o relatório conforme as diretrizes fornecidas.
 `;
 
+    const finalUserPrompt = weaknessesText
+        ? `${userPromptContent}\n${weaknessesText}\n\nIMPORTANTE: Acima há um bloco chamado 'DETECTED_WEAKNESSES' com pontos que apresentaram score menor que 3. Ao gerar o relatório, inclua cada item desse bloco na seção 'Pontos de Melhoria' da dimensão correspondente, explicando por que a resposta indica fragilidade (use a linha "Motivo" como base). Mantenha o formato solicitado no system prompt.`
+        : userPromptContent;
+
     const apiUrl = "https://api.openai.com/v1/chat/completions";
     const requestBody = {
         model: "gpt-3.5-turbo", 
         messages: [
             { role: "system", content: systemPrompt },
-            { role: "user", content: userPromptContent }
+            { role: "user", content: finalUserPrompt }
         ],
         temperature: 0.7,
     };
