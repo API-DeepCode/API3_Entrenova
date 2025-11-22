@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getResponses } from "./firestoreService.tsx";
-import { gerarRelatorioGemini } from "./openaiService";
+import { gerarRelatorioOpenAI } from "./openaiService";
 
 export async function gerarRelatorio(req: Request, res: Response) {
   try {
@@ -8,7 +8,7 @@ export async function gerarRelatorio(req: Request, res: Response) {
     const respostas = await getResponses("answers");
 
     // Gera o relatório via Gemini com base nas respostas
-    const relatorio = await gerarRelatorioGemini(respostas);
+    const relatorio = await gerarRelatorioOpenAI(respostas);
 
     // Renderiza a view "report" passando o relatório gerado
     res.render("report", { relatorio });

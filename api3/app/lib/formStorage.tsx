@@ -126,19 +126,18 @@ export const saveFormData = (part: number, data: Partial<FormData>) => {
     try {
         // Salva os dados da parte específica
         localStorage.setItem(`form_part${part}`, JSON.stringify(data));
-        
-        // Atualiza os dados completos
-        const completeData = getCompleteFormData();
-        localStorage.setItem('form_complete', JSON.stringify({
-            ...completeData,
-            ...data
-        }));
-        
-        console.log(`Parte ${part} salva com sucesso`);
 
-        // Salva dados completos para uso futuro
-        localStorage.setItem('form_complete', JSON.stringify(completeData));
-        return completeData;
+        // Recalcula os dados completos a partir das partes atuais
+        const recomposed = getCompleteFormData();
+
+        // Mescla os dados recém-salvos (data) sobre os dados recompostos
+        const merged = { ...recomposed, ...data };
+
+        // Persiste o conjunto completo atualizado
+        localStorage.setItem('form_complete', JSON.stringify(merged));
+
+        console.log(`Parte ${part} salva com sucesso`, merged);
+        return merged;
     } catch (error) {
         console.error('Erro ao recuperar dados completos:', error);
         return {} as FormData;
