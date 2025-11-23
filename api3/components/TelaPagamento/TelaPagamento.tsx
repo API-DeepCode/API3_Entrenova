@@ -1,11 +1,9 @@
 "use client";
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-// Importa o arquivo de estilos localmente
-import './TelaPagamento.css'; 
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import "./TelaPagamento.css";
 
-
-// Define o tipo para os dados do formulário
+// Define o tipo para os dados do formulario
 interface CardData {
   cardNumber: string;
   cardHolder: string;
@@ -14,10 +12,10 @@ interface CardData {
 }
 
 const initialData: CardData = {
-  cardNumber: '',
-  cardHolder: '',
-  expiryDate: '',
-  cvv: '',
+  cardNumber: "",
+  cardHolder: "",
+  expiryDate: "",
+  cvv: "",
 };
 
 const TelaPagamento: React.FC = () => {
@@ -28,16 +26,16 @@ const TelaPagamento: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === 'expiryDate') {
-        const cleanedValue = value.replace(/[^0-9]/g, '');
-        let formattedValue = cleanedValue;
+    if (name === "expiryDate") {
+      const cleanedValue = value.replace(/[^0-9]/g, "");
+      let formattedValue = cleanedValue;
 
-        if (cleanedValue.length > 2) {
-            formattedValue = `${cleanedValue.slice(0, 2)}/${cleanedValue.slice(2, 4)}`;
-        }
-        setData(prev => ({ ...prev, [name]: formattedValue }));
+      if (cleanedValue.length > 2) {
+        formattedValue = `${cleanedValue.slice(0, 2)}/${cleanedValue.slice(2, 4)}`;
+      }
+      setData((prev) => ({ ...prev, [name]: formattedValue }));
     } else {
-        setData(prev => ({ ...prev, [name]: value }));
+      setData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -46,13 +44,13 @@ const TelaPagamento: React.FC = () => {
     if (isProcessing) return;
 
     setIsProcessing(true);
-    console.log('Finalizando pagamento com os dados:', data);
+    console.log("Finalizando pagamento com os dados:", data);
     setData(initialData);
 
     // Mostra a tela de confirmacao e redireciona para o dashboard
     const searchParams = new URLSearchParams({
-      status: 'paid',
-      redirect: '/dashboard',
+      status: "paid",
+      redirect: "/dashboard",
     });
     router.push(`/payment/callback?${searchParams.toString()}`);
   };
@@ -60,13 +58,10 @@ const TelaPagamento: React.FC = () => {
   return (
     <div className="payment-screen">
       <div className="payment-container">
-        <h2>
-          <span role="img" aria-label="card">💳</span> Finalizar Pagamento
-        </h2>
+        <h2>Finalizar Pagamento</h2>
         <form onSubmit={handleSubmit}>
-          
           <div className="form-group">
-            <label htmlFor="card-number">Número do Cartão</label>
+            <label htmlFor="card-number">Numero do Cartao</label>
             <input
               type="text"
               id="card-number"
@@ -87,7 +82,7 @@ const TelaPagamento: React.FC = () => {
               name="cardHolder"
               value={data.cardHolder}
               onChange={handleChange}
-              placeholder="Nome Completo (como no cartão)"
+              placeholder="Nome Completo (como no cartao)"
               required
             />
           </div>
@@ -106,7 +101,7 @@ const TelaPagamento: React.FC = () => {
                 required
               />
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="cvv">CVV</label>
               <input
@@ -123,7 +118,7 @@ const TelaPagamento: React.FC = () => {
           </div>
 
           <button type="submit" className="pay-button" disabled={isProcessing}>
-            {isProcessing ? 'Processando...' : 'Finalizar Pagamento'}
+            {isProcessing ? "Processando..." : "Finalizar Pagamento"}
           </button>
         </form>
       </div>
