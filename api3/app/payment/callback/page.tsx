@@ -9,7 +9,7 @@ export default function PaymentCallbackPage() {
   const searchParams = useSearchParams();
 
   const status = searchParams.get("status") || "";
-  const redirect = searchParams.get("redirect") || "/AiAnswer";
+  const redirect = searchParams.get("redirect") || "/dashboard";
   const unlockToken = searchParams.get("token") || null;
 
   const isPaid = useMemo(
@@ -25,8 +25,10 @@ export default function PaymentCallbackPage() {
       const redirectUrl = redirect.includes("?")
         ? `${redirect}&status=paid`
         : `${redirect}?status=paid`;
-      router.replace(redirectUrl);
-      return;
+      const timer = setTimeout(() => {
+        router.replace(redirectUrl);
+      }, 1600);
+      return () => clearTimeout(timer);
     }
 
     // Se chegou sem status pago, volta para planos para refazer o pagamento.
@@ -46,7 +48,7 @@ export default function PaymentCallbackPage() {
             </div>
             <h1 className="text-2xl font-semibold mb-2">Pagamento confirmado</h1>
             <p className="text-sm text-white/75">
-              Liberando seu relatório completo e redirecionando...
+              Pagamento confirmado. Redirecionando para o dashboard...
             </p>
           </>
         ) : (

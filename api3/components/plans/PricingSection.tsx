@@ -269,7 +269,9 @@ export function PricingSection() {
                   {personalized ? (
                     <span>Fale Conosco</span>
                   ) : (
-                    <Link href="/dashboard/comercial">Começar Agora</Link>
+                    <Link href={`/TelaPagamento?plano=${tier.name.toLowerCase()}&ciclo=${billing}`}>
+                      Comprar trilha
+                    </Link>
                   )}
                 </Button>
               </CardContent>
