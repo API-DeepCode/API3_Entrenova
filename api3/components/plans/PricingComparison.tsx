@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface Feature {
   name: string;
@@ -78,8 +79,8 @@ const features: Feature[] = [
 ];
 
 const plans = [
-  { name: "Starter", price: "R$ 499/mês", cta: "Começar Agora", variant: "outline" as const },
-  { name: "Profissional", price: "R$ 1.299/mês", cta: "Começar Agora", variant: "default" as const, popular: true },
+  { name: "Starter", price: "R$ 499/mês", cta: "Comprar trilha", variant: "outline" as const },
+  { name: "Profissional", price: "R$ 1.299/mês", cta: "Comprar trilha", variant: "default" as const, popular: true },
   { name: "Enterprise", price: "Personalizado", cta: "Fale Conosco", variant: "outline" as const }
 ];
 
@@ -138,21 +139,29 @@ export function PricingComparison() {
 
             <tr>
               <td className="p-4"></td>
-              {plans.map((plan) => (
-                <td key={plan.name} className="p-4">
-                  <Button
-                    className={
-                      "w-full transition-all " +
-                      (plan.popular
-                        ? "bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] hover:from-[#ff4687]/90 hover:to-[#4d2cc4]/90 text-white"
-                        : "")
-                    }
-                    variant={plan.variant}
-                  >
-                    {plan.cta}
-                  </Button>
-                </td>
-              ))}
+              {plans.map((plan) => {
+                const isBuyable = plan.cta !== "Fale Conosco";
+                const href = isBuyable
+                  ? `/TelaPagamento?plano=${plan.name.toLowerCase()}`
+                  : "/plans#contato";
+
+                return (
+                  <td key={plan.name} className="p-4">
+                    <Button
+                      asChild={isBuyable}
+                      className={
+                        "w-full transition-all " +
+                        (plan.popular
+                          ? "bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] hover:from-[#ff4687]/90 hover:to-[#4d2cc4]/90 text-white"
+                          : "")
+                      }
+                      variant={plan.variant}
+                    >
+                      {isBuyable ? <Link href={href}>{plan.cta}</Link> : plan.cta}
+                    </Button>
+                  </td>
+                );
+              })}
             </tr>
           </tbody>
         </table>
