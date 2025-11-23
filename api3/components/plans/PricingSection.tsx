@@ -26,50 +26,49 @@ const ANNUAL_DISCOUNT = 0.2; // 20%
 
 const pricingTiers: PricingTier[] = [
   {
-    name: "Starter",
-    description:
-      "Ideal para pequenas equipes iniciando sua jornada de aprendizado corporativo.",
-    monthlyPrice: 499,
+    name: "Ouro",
+    description: "Para equipes que querem iniciar com trilhas guiadas e onboarding rápido.",
+    monthlyPrice: 690,
     features: [
-      "Até 3 trilhas personalizadas",
-      "Suporte para 20 colaboradores",
-      "Relatórios básicos de progresso",
-      "Acesso por 6 meses",
-      "Suporte por e-mail",
+      "3 trilhas prioritárias habilitadas em 48h",
+      "Onboarding assistido para 15 colaboradores",
+      "Relatórios essenciais de progresso",
+      "Trilha de boas-vindas com playbook pronto",
+      "Suporte via e-mail",
     ],
   },
   {
-    name: "Profissional",
-    description:
-      "Perfeito para empresas em crescimento que buscam desenvolvimento contínuo.",
-    monthlyPrice: 1299,
+    name: "Diamante",
+    description: "Para quem precisa acelerar rollout e acompanhar indicadores de perto.",
+    monthlyPrice: 1290,
     features: [
-      "Até 10 trilhas personalizadas",
-      "Suporte para 100 colaboradores",
-      "Relatórios avançados e analytics",
-      "Acesso por 12 meses",
-      "Suporte prioritário",
-      "Consultoria mensal de 2 horas",
-      "Certificados de conclusão",
+      "8 trilhas personalizadas liberadas em 72h",
+      "Onboarding de equipe com importação em massa",
+      "Relatórios avançados + painel executivo",
+      "Workshops mensais de alinhamento com gestor",
+      "Suporte prioritário e horário estendido",
     ],
     highlighted: true,
   },
   {
-    name: "Enterprise",
-    description:
-      "Solução completa para grandes organizações com necessidades específicas.",
+    name: "Premium",
+    description: "Para rollout em grande escala e integração com sistemas internos.",
+    monthlyPrice: 2190,
     features: [
-      "Trilhas ilimitadas",
-      "Usuários ilimitados",
-      "Dashboard executivo personalizado",
-      "Acesso vitalício",
-      "Suporte dedicado 24/7",
-      "Consultoria semanal",
-      "Integração com sistemas corporativos",
-      "Gamificação e engajamento",
+      "Trilhas ilimitadas + jornada gamificada",
+      "Onboarding com gestor dedicado",
+      "SLAs de suporte e canal direto",
+      "Roadmap trimestral de trilhas sob demanda",
+      "Integrações e SSO incluídos",
     ],
   },
 ];
+
+const planSlugMapping: Record<string, string> = {
+  ouro: "ouro",
+  diamante: "diamante",
+  premium: "premium",
+};
 
 function formatBRL(value: number) {
   return value.toLocaleString("pt-BR", {
@@ -269,7 +268,9 @@ export function PricingSection() {
                   {personalized ? (
                     <span>Fale Conosco</span>
                   ) : (
-                    <Link href={`/TelaPagamento?plano=${tier.name.toLowerCase()}&ciclo=${billing}`}>
+                    <Link
+                      href={`/TelaPagamento?plano=${planSlugMapping[tier.name.toLowerCase()] || tier.name.toLowerCase()}&ciclo=${billing}`}
+                    >
                       Comprar trilha
                     </Link>
                   )}

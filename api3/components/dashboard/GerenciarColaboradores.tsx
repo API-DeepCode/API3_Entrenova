@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from 'react';
-import { UserPlus, Trash2, Mail, Phone, Briefcase, Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { UserPlus, Trash2, Mail, Phone, Briefcase, Search, IdCard } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,10 +15,31 @@ interface Colaborador {
   name: string;
   email: string;
   phone: string;
+  cpf: string;
   role: string;
   department: string;
   status: 'active' | 'inactive';
   joinedAt: string;
+}
+
+function formatCpf(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  const parts = [
+    digits.slice(0, 3),
+    digits.slice(3, 6),
+    digits.slice(6, 9),
+    digits.slice(9, 11),
+  ].filter(Boolean);
+  if (parts.length === 0) return "";
+  if (parts.length <= 3) return parts.join(".");
+  return `${parts[0]}.${parts[1]}.${parts[2]}${parts[3] ? `-${parts[3]}` : ""}`;
+}
+
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
 export function GerenciarColaboradores() {
@@ -27,6 +49,7 @@ export function GerenciarColaboradores() {
       name: 'João Silva',
       email: 'joao.silva@empresa.com',
       phone: '(11) 98765-4321',
+      cpf: '123.456.789-00',
       role: 'Desenvolvedor',
       department: 'TI',
       status: 'active',
@@ -37,6 +60,7 @@ export function GerenciarColaboradores() {
       name: 'Ana Costa',
       email: 'ana.costa@empresa.com',
       phone: '(11) 98765-4322',
+      cpf: '987.654.321-00',
       role: 'Designer',
       department: 'Design',
       status: 'active',
@@ -47,6 +71,7 @@ export function GerenciarColaboradores() {
       name: 'Lucas Reis',
       email: 'lucas.reis@empresa.com',
       phone: '(11) 98765-4323',
+      cpf: '321.654.987-00',
       role: 'Analista',
       department: 'Marketing',
       status: 'active',
@@ -57,6 +82,7 @@ export function GerenciarColaboradores() {
       name: 'Marina Souza',
       email: 'marina.souza@empresa.com',
       phone: '(11) 98765-4324',
+      cpf: '159.357.456-00',
       role: 'Gerente',
       department: 'Vendas',
       status: 'active',
@@ -67,6 +93,7 @@ export function GerenciarColaboradores() {
       name: 'Carlos Lima',
       email: 'carlos.lima@empresa.com',
       phone: '(11) 98765-4325',
+      cpf: '852.741.963-00',
       role: 'Coordenador',
       department: 'RH',
       status: 'inactive',
@@ -81,12 +108,20 @@ export function GerenciarColaboradores() {
     name: '',
     email: '',
     phone: '',
+    cpf: '',
     role: '',
     department: '',
   });
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('onboarding') === '1') {
+      setIsDialogOpen(true);
+    }
+  }, [searchParams]);
 
   const handleAddColaborador = () => {
-    if (!newColaborador.name || !newColaborador.email || !newColaborador.role) {
+    if (!newColaborador.name || !newColaborador.email || !newColaborador.role || !newColaborador.cpf) {
       return;
     }
 
@@ -102,6 +137,7 @@ export function GerenciarColaboradores() {
       name: '',
       email: '',
       phone: '',
+      cpf: '',
       role: '',
       department: '',
     });
@@ -117,6 +153,7 @@ export function GerenciarColaboradores() {
     (c) =>
       c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.cpf.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -131,8 +168,8 @@ export function GerenciarColaboradores() {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-3xl text-white mb-2">Gerenciar Colaboradores</h2>
-          <p className="text-white/60">Adicione, edite ou remova colaboradores da plataforma</p>
+          <h2 className="text-3xl text-white mb-2">Gestao de Equipe</h2>
+          <p className="text-white/60">Adicione rapidamente colaboradores para liberar as trilhas adquiridas</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
@@ -175,6 +212,20 @@ export function GerenciarColaboradores() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="cpf" className="text-white">
+                  CPF *
+                </Label>
+                <Input
+                  id="cpf"
+                  placeholder="000.000.000-00"
+                  value={newColaborador.cpf}
+                  onChange={(e) => setNewColaborador({ ...newColaborador, cpf: formatCpf(e.target.value) })}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                  inputMode="numeric"
+                  maxLength={14}
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="phone" className="text-white">
                   Telefone
                 </Label>
@@ -182,8 +233,10 @@ export function GerenciarColaboradores() {
                   id="phone"
                   placeholder="(11) 98765-4321"
                   value={newColaborador.phone}
-                  onChange={(e) => setNewColaborador({ ...newColaborador, phone: e.target.value })}
+                  onChange={(e) => setNewColaborador({ ...newColaborador, phone: formatPhone(e.target.value) })}
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                  inputMode="numeric"
+                  maxLength={16}
                 />
               </div>
               <div className="space-y-2">
@@ -276,6 +329,7 @@ export function GerenciarColaboradores() {
               <tr>
                 <th className="text-left p-4 text-white/70">Nome</th>
                 <th className="text-left p-4 text-white/70">E-mail</th>
+                <th className="text-left p-4 text-white/70">CPF</th>
                 <th className="text-left p-4 text-white/70">Telefone</th>
                 <th className="text-left p-4 text-white/70">Cargo</th>
                 <th className="text-left p-4 text-white/70">Departamento</th>
@@ -305,6 +359,12 @@ export function GerenciarColaboradores() {
                     <div className="flex items-center gap-2 text-white/70">
                       <Mail size={16} />
                       <span>{colaborador.email}</span>
+                    </div>
+                  </td>
+                  <td className="p-4">
+                    <div className="flex items-center gap-2 text-white/70">
+                      <IdCard size={16} />
+                      <span>{colaborador.cpf}</span>
                     </div>
                   </td>
                   <td className="p-4">
