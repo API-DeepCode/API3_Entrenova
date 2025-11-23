@@ -48,7 +48,7 @@ export default function PaymentCallbackPage() {
             </div>
             <h1 className="text-2xl font-semibold mb-2">Pagamento confirmado</h1>
             <p className="text-sm text-white/75">
-              Pagamento confirmado. Redirecionando para o dashboard...
+              Pagamento confirmado. Redirecionando para Gestao de Equipe...
             </p>
           </>
         ) : (

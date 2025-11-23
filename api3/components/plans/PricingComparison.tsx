@@ -4,85 +4,79 @@ import Link from "next/link";
 
 interface Feature {
   name: string;
-  starter: boolean | string;
-  professional: boolean | string;
-  enterprise: boolean | string;
+  ouro: boolean | string;
+  diamante: boolean | string;
+  premium: boolean | string;
 }
 
 const features: Feature[] = [
   {
-    name: "Número de trilhas personalizadas",
-    starter: "Até 3",
-    professional: "Até 10",
-    enterprise: "Ilimitado"
+    name: "Trilhas habilitadas",
+    ouro: "3 prioritárias em 48h",
+    diamante: "8 personalizadas em 72h",
+    premium: "Ilimitadas + gamificada"
   },
   {
-    name: "Colaboradores inclusos",
-    starter: "20",
-    professional: "100",
-    enterprise: "Ilimitado"
+    name: "Onboarding de equipe",
+    ouro: "Assistido para 15 colaboradores",
+    diamante: "Importação em massa",
+    premium: "Gestor dedicado + playbook"
   },
   {
-    name: "Duração do acesso",
-    starter: "6 meses",
-    professional: "12 meses",
-    enterprise: "Vitalício"
+    name: "Relatórios",
+    ouro: "Essenciais",
+    diamante: "Avançados + executivo",
+    premium: "Completos + SLAs"
   },
   {
-    name: "Relatórios e analytics",
-    starter: "Básico",
-    professional: "Avançado",
-    enterprise: "Personalizado"
+    name: "Suporte",
+    ouro: "E-mail",
+    diamante: "Prioritário",
+    premium: "Canal dedicado + SLAs"
   },
   {
-    name: "Certificados de conclusão",
-    starter: false,
-    professional: true,
-    enterprise: true
+    name: "Integrações e SSO",
+    ouro: false,
+    diamante: "Conectores principais",
+    premium: "SSO + integrações ilimitadas"
   },
   {
-    name: "Consultoria especializada",
-    starter: false,
-    professional: "2h/mês",
-    enterprise: "Semanal"
+    name: "Equipe atendida",
+    ouro: "Até 15 pessoas",
+    diamante: "Até 80 pessoas",
+    premium: "Ilimitado"
   },
   {
-    name: "Suporte prioritário",
-    starter: false,
-    professional: true,
-    enterprise: true
+    name: "Lançamento de novas trilhas",
+    ouro: "1 por mês",
+    diamante: "3 por mês",
+    premium: "Sob demanda"
   },
   {
-    name: "Suporte 24/7 dedicado",
-    starter: false,
-    professional: false,
-    enterprise: true
+    name: "Sessões de alinhamento com gestor",
+    ouro: "Trimestral",
+    diamante: "Mensal",
+    premium: "Quinzenal"
   },
   {
-    name: "Dashboard executivo",
-    starter: false,
-    professional: false,
-    enterprise: true
-  },
-  {
-    name: "Integração com sistemas corporativos",
-    starter: false,
-    professional: false,
-    enterprise: true
-  },
-  {
-    name: "Gamificação e engajamento",
-    starter: false,
-    professional: false,
-    enterprise: true
+    name: "Garantia de adoção",
+    ouro: "Kickoff guiado",
+    diamante: "Plano de engajamento + nudges",
+    premium: "Squad de Customer Success dedicado"
   }
 ];
 
 const plans = [
-  { name: "Starter", price: "R$ 499/mês", cta: "Comprar trilha", variant: "outline" as const },
-  { name: "Profissional", price: "R$ 1.299/mês", cta: "Comprar trilha", variant: "default" as const, popular: true },
-  { name: "Enterprise", price: "Personalizado", cta: "Fale Conosco", variant: "outline" as const }
+  { name: "Ouro", price: "R$ 690/mês", cta: "Comprar trilha", variant: "outline" as const },
+  { name: "Diamante", price: "R$ 1.290/mês", cta: "Comprar trilha", variant: "default" as const, popular: true },
+  { name: "Premium", price: "R$ 2.190/mês", cta: "Comprar trilha", variant: "outline" as const }
 ];
+
+const planSlugMapping: Record<string, string> = {
+  ouro: "ouro",
+  diamante: "diamante",
+  premium: "premium",
+};
 
 export function PricingComparison() {
   return (
@@ -121,7 +115,7 @@ export function PricingComparison() {
               <tr key={index} className="border-b border-white/10 hover:bg-white/10 transition-colors">
                 <td className="p-4 text-gray-300">{feature.name}</td>
 
-                {[feature.starter, feature.professional, feature.enterprise].map((value, i) => (
+                {[feature.ouro, feature.diamante, feature.premium].map((value, i) => (
                   <td key={i} className="p-4 text-center">
                     {typeof value === "boolean" ? (
                       value ? (
@@ -142,7 +136,7 @@ export function PricingComparison() {
               {plans.map((plan) => {
                 const isBuyable = plan.cta !== "Fale Conosco";
                 const href = isBuyable
-                  ? `/TelaPagamento?plano=${plan.name.toLowerCase()}`
+                  ? `/TelaPagamento?plano=${planSlugMapping[plan.name.toLowerCase()] || plan.name.toLowerCase()}`
                   : "/plans#contato";
 
                 return (
