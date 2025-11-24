@@ -1,26 +1,37 @@
 "use client";
 
-import { useState } from 'react';
-import { User, Lock, Bell, Upload, Camera } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { toast } from 'sonner';
+import { useEffect, useRef, useState } from "react";
+import { User, Lock, Bell, Upload, Camera } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+
+interface ProfileData {
+  name: string;
+  email: string;
+  role: string;
+  avatar?: string;
+}
 
 export function ConfiguracoesFuncionario() {
-  const [profileData, setProfileData] = useState({
-    name: 'João Silva',
-    email: 'joao.silva@techcorp.com.br',
-    role: 'Analista de Marketing',
-    avatar: '',
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [profileData, setProfileData] = useState<ProfileData>({
+    name: "João Silva",
+    email: "joao.silva@techcorp.com.br",
+    role: "Analista de Marketing",
+    avatar: "",
   });
 
+  const [storedPassword, setStoredPassword] = useState<string>("123456");
+
   const [passwordData, setPasswordData] = useState({
-    current: '',
-    new: '',
-    confirm: '',
+    current: "",
+    new: "",
+    confirm: "",
   });
 
   const [notifications, setNotifications] = useState({
@@ -30,29 +41,87 @@ export function ConfiguracoesFuncionario() {
     comments: true,
   });
 
+  // Carrega dados do usuário logado
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("usuarioLogado");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const normalized: ProfileData = {
+          name: parsed.name || parsed.nome_responsavel || profileData.name,
+          email: parsed.email || parsed.email_contato || profileData.email,
+          role: parsed.role || parsed.cargo_responsavel || profileData.role,
+          avatar: parsed.avatar || "",
+        };
+        setProfileData((prev) => ({ ...prev, ...normalized }));
+      }
+      const savedPass = localStorage.getItem("usuarioSenha");
+      if (savedPass) setStoredPassword(savedPass);
+    } catch {
+      // fallback silencioso
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const persistUser = (data: ProfileData) => {
+    try {
+      localStorage.setItem("usuarioLogado", JSON.stringify(data));
+    } catch {
+      // ignore
+    }
+  };
+
   const handleSaveProfile = () => {
-    toast.success('Perfil atualizado com sucesso!');
+    // Mantém nome e e-mail originais do login; persiste demais campos (avatar, role)
+    persistUser(profileData);
+    toast.success("Perfil atualizado e sincronizado com o login!");
   };
 
   const handleChangePassword = () => {
     if (passwordData.new !== passwordData.confirm) {
-      toast.error('As senhas não coincidem!');
+      toast.error("As senhas não coincidem!");
       return;
     }
     if (passwordData.new.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres!');
+      toast.error("A senha deve ter pelo menos 6 caracteres!");
       return;
     }
-    toast.success('Senha alterada com sucesso!');
-    setPasswordData({ current: '', new: '', confirm: '' });
+    if (passwordData.current !== storedPassword) {
+      toast.error("Senha atual incorreta!");
+      return;
+    }
+    try {
+      localStorage.setItem("usuarioSenha", passwordData.new);
+      setStoredPassword(passwordData.new);
+      toast.success("Senha alterada com sucesso!");
+      setPasswordData({ current: "", new: "", confirm: "" });
+    } catch {
+      toast.error("Não foi possível alterar a senha agora.");
+    }
   };
 
   const handleSaveNotifications = () => {
-    toast.success('Preferências de notificação salvas!');
+    toast.success("Preferências de notificação salvas!");
   };
 
   const handleUploadAvatar = () => {
-    toast.success('Foto de perfil atualizada!');
+    fileInputRef.current?.click();
+  };
+
+  const onAvatarSelected: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setProfileData((prev) => {
+        const updated = { ...prev, avatar: result };
+        persistUser(updated);
+        return updated;
+      });
+      toast.success("Foto de perfil atualizada!");
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -64,21 +133,21 @@ export function ConfiguracoesFuncionario() {
 
       <Tabs defaultValue="perfil" className="w-full">
         <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 bg-white/5 border border-white/10 mb-8">
-          <TabsTrigger 
-            value="perfil" 
+          <TabsTrigger
+            value="perfil"
             className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#ff4687] data-[state=active]:to-[#4d2cc4]"
           >
             <User size={16} className="mr-2" />
             Meu Perfil
           </TabsTrigger>
-          <TabsTrigger 
+          <TabsTrigger
             value="seguranca"
             className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#ff4687] data-[state=active]:to-[#4d2cc4]"
           >
             <Lock size={16} className="mr-2" />
             Segurança
           </TabsTrigger>
-          <TabsTrigger 
+          <TabsTrigger
             value="notificacoes"
             className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#ff4687] data-[state=active]:to-[#4d2cc4]"
           >
@@ -91,15 +160,19 @@ export function ConfiguracoesFuncionario() {
         <TabsContent value="perfil" className="space-y-6">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
             <h3 className="text-xl text-white mb-8">Informações Pessoais</h3>
-            
+
             {/* Upload de Avatar */}
             <div className="flex items-center gap-8 mb-8 pb-8 border-b border-white/10">
               <div className="relative">
-                <div className="w-32 h-32 bg-gradient-to-br from-[#ff4687] to-[#4d2cc4] rounded-full flex items-center justify-center text-white text-4xl">
+                <div className="w-32 h-32 bg-gradient-to-br from-[#ff4687] to-[#4d2cc4] rounded-full flex items-center justify-center text-white text-4xl overflow-hidden">
                   {profileData.avatar ? (
-                    <img src={profileData.avatar} alt="Avatar" className="w-full h-full rounded-full object-cover" />
+                    <img src={profileData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
-                    profileData.name.split(' ').map(n => n[0]).join('').slice(0, 2)
+                    profileData.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .slice(0, 2)
                   )}
                 </div>
                 <button
@@ -108,8 +181,15 @@ export function ConfiguracoesFuncionario() {
                 >
                   <Camera size={18} className="text-white" />
                 </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={onAvatarSelected}
+                />
               </div>
-              
+
               <div className="flex-1">
                 <h4 className="text-white text-lg mb-2">{profileData.name}</h4>
                 <p className="text-white/60 mb-4">{profileData.role}</p>
@@ -127,29 +207,38 @@ export function ConfiguracoesFuncionario() {
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div className="col-span-2 space-y-2">
-                  <Label htmlFor="name" className="text-white/80">Nome Completo</Label>
+                  <Label htmlFor="name" className="text-white/80">
+                    Nome Completo
+                  </Label>
                   <Input
                     id="name"
                     value={profileData.name}
-                    onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                    className="bg-white/10 border-white/20 text-white"
+                    readOnly
+                    disabled
+                    className="bg-white/5 border-white/10 text-white/60 cursor-not-allowed"
                   />
+                  <p className="text-white/40 text-xs">Definido no login, não pode ser alterado aqui</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white/80">E-mail</Label>
+                  <Label htmlFor="email" className="text-white/80">
+                    E-mail (login)
+                  </Label>
                   <Input
                     id="email"
                     type="email"
                     value={profileData.email}
+                    readOnly
                     disabled
-                    className="bg-white/5 border-white/10 text-white/50 cursor-not-allowed"
+                    className="bg-white/5 border-white/10 text-white/60 cursor-not-allowed"
                   />
-                  <p className="text-white/40 text-xs">O e-mail não pode ser alterado</p>
+                  <p className="text-white/40 text-xs">Usado para login e recuperação. Não pode ser alterado.</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="role" className="text-white/80">Cargo / Função</Label>
+                  <Label htmlFor="role" className="text-white/80">
+                    Cargo / Função
+                  </Label>
                   <Input
                     id="role"
                     value={profileData.role}
@@ -176,10 +265,12 @@ export function ConfiguracoesFuncionario() {
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
             <h3 className="text-xl text-white mb-2">🔒 Alterar Senha</h3>
             <p className="text-white/60 mb-8">Mantenha sua conta segura com uma senha forte</p>
-            
+
             <div className="space-y-6 max-w-xl">
               <div className="space-y-2">
-                <Label htmlFor="current-password" className="text-white/80">Senha Atual</Label>
+                <Label htmlFor="current-password" className="text-white/80">
+                  Senha Atual
+                </Label>
                 <Input
                   id="current-password"
                   type="password"
@@ -191,7 +282,9 @@ export function ConfiguracoesFuncionario() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="new-password" className="text-white/80">Nova Senha</Label>
+                <Label htmlFor="new-password" className="text-white/80">
+                  Nova Senha
+                </Label>
                 <Input
                   id="new-password"
                   type="password"
@@ -204,7 +297,9 @@ export function ConfiguracoesFuncionario() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirm-password" className="text-white/80">Confirmar Nova Senha</Label>
+                <Label htmlFor="confirm-password" className="text-white/80">
+                  Confirmar Nova Senha
+                </Label>
                 <Input
                   id="confirm-password"
                   type="password"
@@ -243,7 +338,7 @@ export function ConfiguracoesFuncionario() {
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
             <h3 className="text-xl text-white mb-2">🔔 Preferências de E-mail</h3>
             <p className="text-white/60 mb-8">Escolha quais notificações você deseja receber</p>
-            
+
             <div className="space-y-6">
               <div className="flex items-center justify-between py-4 border-b border-white/10">
                 <div>
@@ -259,7 +354,7 @@ export function ConfiguracoesFuncionario() {
               <div className="flex items-center justify-between py-4 border-b border-white/10">
                 <div>
                   <p className="text-white mb-1">Novas Conquistas</p>
-                  <p className="text-white/60 text-sm">Notificação quando você ganhar um novo badge</p>
+                  <p className="text-white/60 text-sm">Seja avisado quando receber novos badges</p>
                 </div>
                 <Switch
                   checked={notifications.newBadge}
@@ -270,7 +365,7 @@ export function ConfiguracoesFuncionario() {
               <div className="flex items-center justify-between py-4 border-b border-white/10">
                 <div>
                   <p className="text-white mb-1">Relatório Semanal</p>
-                  <p className="text-white/60 text-sm">Resumo semanal do seu progresso e atividades</p>
+                  <p className="text-white/60 text-sm">Resumo do seu progresso em trilhas e aulas</p>
                 </div>
                 <Switch
                   checked={notifications.weeklyReport}
@@ -280,23 +375,23 @@ export function ConfiguracoesFuncionario() {
 
               <div className="flex items-center justify-between py-4">
                 <div>
-                  <p className="text-white mb-1">Respostas a Comentários</p>
-                  <p className="text-white/60 text-sm">Quando alguém responder seus comentários ou feedbacks</p>
+                  <p className="text-white mb-1">Comentários e Feedback</p>
+                  <p className="text-white/60 text-sm">Avisos sobre feedback em atividades e aulas</p>
                 </div>
                 <Switch
                   checked={notifications.comments}
                   onCheckedChange={(checked) => setNotifications({ ...notifications, comments: checked })}
                 />
               </div>
-            </div>
 
-            <div className="flex justify-end mt-6">
-              <Button
-                onClick={handleSaveNotifications}
-                className="bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] text-white hover:opacity-90"
-              >
-                Salvar Preferências
-              </Button>
+              <div className="flex justify-end pt-4">
+                <Button
+                  onClick={handleSaveNotifications}
+                  className="bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] text-white hover:opacity-90"
+                >
+                  Salvar Preferências
+                </Button>
+              </div>
             </div>
           </div>
         </TabsContent>

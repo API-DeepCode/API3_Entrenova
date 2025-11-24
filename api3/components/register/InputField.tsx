@@ -8,6 +8,8 @@ type InputFieldProps = {
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  maxLength?: number;
 };
 
 export function InputField({
@@ -17,6 +19,8 @@ export function InputField({
   placeholder,
   onChange,
   type = "text",
+  inputMode,
+  maxLength,
 }: InputFieldProps) {
   return (
     <div className={styles.inputContainer}>
@@ -29,6 +33,8 @@ export function InputField({
         onChange={onChange}
         placeholder={placeholder}
         required
+        inputMode={inputMode}
+        maxLength={maxLength}
         className={`${styles.inputBase} ${value ? styles.filled : ''}`}
       />
     </div>

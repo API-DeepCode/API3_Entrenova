@@ -12,6 +12,29 @@ import { InputField } from "@/components/register/InputField";
 import { PasswordField } from "@/components/register/PasswordField";
 import { SelectField } from "@/components/register/SelectField";
 
+function formatCnpj(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 14);
+  const parts = [
+    digits.slice(0, 2),
+    digits.slice(2, 5),
+    digits.slice(5, 8),
+    digits.slice(8, 12),
+    digits.slice(12, 14),
+  ].filter(Boolean);
+  if (parts.length === 0) return "";
+  if (parts.length <= 2) return parts.join(".");
+  if (parts.length === 3) return `${parts[0]}.${parts[1]}.${parts[2]}`;
+  if (parts.length === 4) return `${parts[0]}.${parts[1]}.${parts[2]}/${parts[3]}`;
+  return `${parts[0]}.${parts[1]}.${parts[2]}/${parts[3]}-${parts[4]}`;
+}
+
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 export default function RegisterPage() {
   const navigate = useNavigation();
 
@@ -35,7 +58,13 @@ export default function RegisterPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    let nextValue = value;
+    if (name === "cnpj") {
+      nextValue = formatCnpj(value);
+    } else if (name === "telefone_contato") {
+      nextValue = formatPhone(value);
+    }
+    setFormData(prev => ({ ...prev, [name]: nextValue }));
   };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,6 +122,8 @@ export default function RegisterPage() {
                 value={formData.cnpj}
                 placeholder="CNPJ"
                 onChange={handleChange}
+                inputMode="numeric"
+                maxLength={18}
               />
 
               <InputField
@@ -111,6 +142,8 @@ export default function RegisterPage() {
                 value={formData.telefone_contato}
                 placeholder="Telefone"
                 onChange={handleChange}
+                inputMode="tel"
+                maxLength={16}
               />
 
               <InputField

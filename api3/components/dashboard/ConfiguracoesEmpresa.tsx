@@ -1,8 +1,8 @@
 "use client";
 
 
-import { useState } from 'react';
-import { CreditCard, Building2, Users, Palette, Bell, Download, Check, AlertCircle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { CreditCard, Building2, Users, Palette, Bell, Download, Check, AlertCircle, Image } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,11 +16,22 @@ interface ConfiguracoesEmpresaProps {
 
 export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps = {}) {
   const [companyData, setCompanyData] = useState({
-    name: 'TechCorp Ltda',
-    cnpj: '12.345.678/0001-90',
-    email: 'contato@techcorp.com.br',
-    phone: '(11) 98765-4321',
+    name: 'Empresa',
+    cnpj: '00.000.000/0000-00',
+    email: 'contato@suaempresa.com',
+    phone: '(11) 90000-0000',
   });
+  const [brandingLogo, setBrandingLogo] = useState<string>('');
+  const logoInputRef = useRef<HTMLInputElement | null>(null);
+
+  const planoOptions = [
+    { id: 'ouro', label: 'Ouro', price: 690 },
+    { id: 'diamante', label: 'Diamante', price: 1290 },
+    { id: 'premium', label: 'Premium', price: 2190 },
+  ];
+  const [selectedPlan, setSelectedPlan] = useState<string>('diamante');
+  const [paymentMethod, setPaymentMethod] = useState<string>('cartao');
+  const [billingEmail, setBillingEmail] = useState<string>('financeiro@suaempresa.com');
 
   const [notifications, setNotifications] = useState({
     newUser: true,
@@ -30,15 +41,139 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
   });
 
   const invoices = [
-    { id: 1, date: '01/11/2024', value: 'R$ 4.950,00', status: 'Pago' },
-    { id: 2, date: '01/10/2024', value: 'R$ 4.950,00', status: 'Pago' },
-    { id: 3, date: '01/09/2024', value: 'R$ 4.950,00', status: 'Pago' },
-    { id: 4, date: '01/08/2024', value: 'R$ 3.850,00', status: 'Pago' },
-    { id: 5, date: '01/07/2024', value: 'R$ 3.850,00', status: 'Pago' },
+    { id: 1, date: '01/11/2024', status: 'Pago' },
+    { id: 2, date: '01/10/2024', status: 'Pago' },
+    { id: 3, date: '01/09/2024', status: 'Pago' },
+    { id: 4, date: '01/08/2024', status: 'Pago' },
+    { id: 5, date: '01/07/2024', status: 'Pago' },
   ];
+
+  function formatCnpj(value: string) {
+    const digits = value.replace(/\D/g, '').slice(0, 14);
+    const parts = [
+      digits.slice(0, 2),
+      digits.slice(2, 5),
+      digits.slice(5, 8),
+      digits.slice(8, 12),
+      digits.slice(12, 14),
+    ].filter(Boolean);
+    if (parts.length === 0) return '';
+    if (parts.length <= 2) return parts.join('.');
+    if (parts.length === 3) return `${parts[0]}.${parts[1]}.${parts[2]}`;
+    if (parts.length === 4) return `${parts[0]}.${parts[1]}.${parts[2]}/${parts[3]}`;
+    return `${parts[0]}.${parts[1]}.${parts[2]}/${parts[3]}-${parts[4]}`;
+  }
+
+  function formatPhone(value: string) {
+    const digits = value.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+
+  useEffect(() => {
+    try {
+      const savedUser = localStorage.getItem('usuarioLogado');
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        setCompanyData((prev) => ({
+          ...prev,
+          name: parsed.nome_empresa || parsed.name || prev.name,
+          cnpj: parsed.cnpj ? formatCnpj(parsed.cnpj) : prev.cnpj,
+          email: parsed.email_contato || parsed.email || prev.email,
+          phone: parsed.telefone_contato ? formatPhone(parsed.telefone_contato) : prev.phone,
+        }));
+        setBillingEmail(parsed.email_contato || parsed.email || billingEmail);
+      }
+      const savedLogo = localStorage.getItem('empresaLogo');
+      if (savedLogo) setBrandingLogo(savedLogo);
+      const savedPlan = localStorage.getItem('empresaPlano');
+      if (savedPlan) setSelectedPlan(savedPlan);
+      const savedMethod = localStorage.getItem('empresaMetodoPagamento');
+      if (savedMethod) setPaymentMethod(savedMethod);
+      const savedBillingEmail = localStorage.getItem('empresaEmailCobranca');
+      if (savedBillingEmail) setBillingEmail(savedBillingEmail);
+    } catch {
+      // ignore
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSaveCompanyData = () => {
     toast.success('Informações da empresa atualizadas com sucesso!');
+  };
+  const handleDownloadInvoice = (invoiceId: number) => {
+    const price = planoOptions.find((p) => p.id === selectedPlan)?.price || 0;
+    const invoice = invoices.find((i) => i.id === invoiceId);
+    const lines = [
+      "Recibo de Pagamento",
+      "--------------------",
+      `Empresa: ${companyData.name}`,
+      `CNPJ: ${companyData.cnpj}`,
+      `Plano: ${planoOptions.find((p) => p.id === selectedPlan)?.label} - R$ ${price.toLocaleString('pt-BR')}`,
+      `Fatura: ${invoice?.id ?? '-'}`,
+      `Data: ${invoice?.date ?? '-'}`,
+      `Status: ${invoice?.status ?? '-'}`,
+      `Método: ${paymentMethod === 'cartão' ? 'Cartão de Crédito' : 'Boleto/PIX'}`,
+      `E-mail cobrança: ${billingEmail}`,
+    ];
+
+    const escapePdfText = (text: string) =>
+      text.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+
+    const textStream = [
+      "BT",
+      "/F1 12 Tf",
+      "50 760 Td",
+      lines.map((l, idx) => `${idx === 0 ? "" : "0 -16 Td"}(${escapePdfText(l)}) Tj`).join("\n"),
+      "ET",
+    ].join("\n");
+
+    const objects: string[] = [
+      "",
+      `1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj`,
+      `2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj`,
+      `3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj`,
+      `4 0 obj
+<< /Length ${textStream.length} >>
+stream
+${textStream}
+endstream
+endobj`,
+      `5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj`,
+    ];
+
+    let pdf = "%PDF-1.4\n";
+    const xref: string[] = ["0000000000 65535 f \n"];
+    for (let i = 1; i < objects.length; i++) {
+      const offset = pdf.length;
+      xref.push(offset.toString().padStart(10, "0") + " 00000 n \n");
+      pdf += objects[i] + "\n";
+    }
+    const xrefStart = pdf.length;
+    pdf += `xref
+0 ${objects.length}
+${xref.join("")}trailer
+<< /Size ${objects.length} /Root 1 0 R >>
+startxref
+${xrefStart}
+%%EOF`;
+
+    const blob = new Blob([pdf], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `fatura-${invoiceId}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleSaveNotifications = () => {
@@ -46,7 +181,40 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
   };
 
   const handleUploadLogo = () => {
-    toast.success('Logo atualizado com sucesso!');
+    logoInputRef.current?.click();
+  };
+
+  const onLogoSelected: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setBrandingLogo(result);
+      try {
+        localStorage.setItem('empresaLogo', result);
+      } catch {
+        // ignore
+      }
+      toast.success('Logo atualizado com sucesso!');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handlePlanChange = (planId: string) => {
+    setSelectedPlan(planId);
+    localStorage.setItem('empresaPlano', planId);
+  };
+
+  const handlePaymentMethodChange = (method: string) => {
+    setPaymentMethod(method);
+    localStorage.setItem('empresaMetodoPagamento', method);
+    toast.success('Método de pagamento atualizado!');
+  };
+
+  const handleBillingEmailChange = (value: string) => {
+    setBillingEmail(value);
+    localStorage.setItem('empresaEmailCobranca', value);
   };
 
   const handleGoToGestores = () => {
@@ -122,8 +290,10 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
                 <Input
                   id="cnpj"
                   value={companyData.cnpj}
-                  onChange={(e) => setCompanyData({ ...companyData, cnpj: e.target.value })}
+                  onChange={(e) => setCompanyData({ ...companyData, cnpj: formatCnpj(e.target.value) })}
                   className="bg-white/10 border-white/20 text-white"
+                  inputMode="numeric"
+                  maxLength={18}
                 />
               </div>
 
@@ -143,8 +313,10 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
                 <Input
                   id="phone"
                   value={companyData.phone}
-                  onChange={(e) => setCompanyData({ ...companyData, phone: e.target.value })}
+                  onChange={(e) => setCompanyData({ ...companyData, phone: formatPhone(e.target.value) })}
                   className="bg-white/10 border-white/20 text-white"
+                  inputMode="tel"
+                  maxLength={16}
                 />
               </div>
             </div>
@@ -166,11 +338,15 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
           <div className="bg-gradient-to-br from-[#4d2cc4]/20 to-[#ff4687]/20 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
             <div className="flex items-start justify-between mb-6">
               <div>
-                <h3 className="text-2xl text-white mb-2">💎 Plano Profissional</h3>
-                <p className="text-white/60">Acesso completo à plataforma</p>
+                <h3 className="text-2xl text-white mb-2">
+                  💎 Plano {planoOptions.find((p) => p.id === selectedPlan)?.label || 'Ouro'}
+                </h3>
+                <p className="text-white/60">Acesso às trilhas conforme o plano atual</p>
               </div>
               <div className="text-right">
-                <p className="text-3xl text-[#a6ff00] mb-1">R$ 4.950</p>
+                <p className="text-3xl text-[#a6ff00] mb-1">
+                  R$ {planoOptions.find((p) => p.id === selectedPlan)?.price.toLocaleString('pt-BR')}
+                </p>
                 <p className="text-white/60 text-sm">por mês</p>
               </div>
             </div>
@@ -189,9 +365,29 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
               <p className="text-white/60 text-sm mt-2">25 licenças disponíveis</p>
             </div>
 
-            <Button className="w-full bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] text-white hover:opacity-90">
-              Gerenciar Assinatura
-            </Button>
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              {planoOptions.map((plan) => (
+                <Button
+                  key={plan.id}
+                  variant={selectedPlan === plan.id ? "default" : "outline"}
+                  className={`w-full ${selectedPlan === plan.id ? "bg-gradient-to-r from-[#ff4687] to-[#4d2cc4] text-white" : "text-white border-white/20"}`}
+                  onClick={() => handlePlanChange(plan.id)}
+                >
+                  {plan.label} • R$ {plan.price.toLocaleString('pt-BR')}/mês
+                </Button>
+              ))}
+            </div>
+
+            <div className="space-y-3 bg-white/5 rounded-xl p-4">
+              <Label className="text-white/80">E-mail para cobrança</Label>
+              <Input
+                value={billingEmail}
+                onChange={(e) => handleBillingEmailChange(e.target.value)}
+                type="email"
+                className="bg-white/10 border-white/20 text-white"
+                placeholder="financeiro@suaempresa.com"
+              />
+            </div>
           </div>
 
           {/* Método de Pagamento */}
@@ -204,15 +400,20 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
                   <CreditCard size={24} className="text-white" />
                 </div>
                 <div>
-                  <p className="text-white">Cartão de Crédito</p>
-                  <p className="text-white/60 text-sm">•••• •••• •••• 4242</p>
-                  <p className="text-white/60 text-sm">Expira em 12/2025</p>
+                  <p className="text-white">{paymentMethod === 'cartao' ? 'Cartão de Crédito' : 'Boleto/PIX'}</p>
+                  <p className="text-white/60 text-sm">
+                    {paymentMethod === 'cartao' ? '•••• •••• •••• 4242' : 'Será enviado ao e-mail de cobrança'}
+                  </p>
+                  <p className="text-white/60 text-sm">
+                    {paymentMethod === 'cartao' ? 'Expira em 12/2025' : billingEmail}
+                  </p>
                 </div>
               </div>
               <Button 
                 className="bg-white/10 border border-white/20 text-white hover:bg-gradient-to-r hover:from-[#ff4687] hover:to-[#4d2cc4] hover:border-transparent transition-all"
+                onClick={() => handlePaymentMethodChange(paymentMethod === 'cartao' ? 'boleto' : 'cartao')}
               >
-                Alterar
+                Alterar para {paymentMethod === 'cartao' ? 'Boleto/PIX' : 'Cartão'}
               </Button>
             </div>
           </div>
@@ -232,10 +433,13 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
                   </tr>
                 </thead>
                 <tbody>
-                  {invoices.map((invoice) => (
+                  {invoices.map((invoice) => {
+                    const price = planoOptions.find((p) => p.id === selectedPlan)?.price || 0;
+                    const value = `R$ ${price.toLocaleString('pt-BR')},00`;
+                    return (
                     <tr key={invoice.id} className="border-t border-white/5 hover:bg-white/5 transition-colors">
                       <td className="p-4 text-white">{invoice.date}</td>
-                      <td className="p-4 text-white">{invoice.value}</td>
+                      <td className="p-4 text-white">{value}</td>
                       <td className="p-4 text-center">
                         <span className={`px-3 py-1 rounded-full text-xs flex items-center justify-center gap-1 w-fit mx-auto ${
                           invoice.status === 'Pago' 
@@ -251,13 +455,15 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
                           variant="ghost" 
                           size="sm"
                           className="text-[#4d2cc4] hover:text-[#ff4687] hover:bg-white/10"
+                          onClick={() => handleDownloadInvoice(invoice.id)}
                         >
                           <Download size={16} className="mr-2" />
                           Baixar PDF
                         </Button>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -290,8 +496,12 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
               <div>
                 <Label className="text-white/80 mb-3 block">Logo da Empresa</Label>
                 <div className="flex items-center gap-6">
-                  <div className="w-32 h-32 bg-white/10 rounded-xl border-2 border-dashed border-white/20 flex items-center justify-center">
-                    <Palette size={32} className="text-white/40" />
+                  <div className="w-32 h-32 bg-white/10 rounded-xl border-2 border-dashed border-white/20 flex items-center justify-center overflow-hidden">
+                    {brandingLogo ? (
+                      <img src={brandingLogo} alt="Logo da empresa" className="w-full h-full object-contain" />
+                    ) : (
+                      <Palette size={32} className="text-white/40" />
+                    )}
                   </div>
                   <div className="flex-1">
                     <p className="text-white/60 text-sm mb-3">
@@ -308,6 +518,13 @@ export function ConfiguracoesEmpresa({ onNavigate }: ConfiguracoesEmpresaProps =
                         Remover
                       </Button>
                     </div>
+                    <input
+                      ref={logoInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={onLogoSelected}
+                    />
                   </div>
                 </div>
               </div>
